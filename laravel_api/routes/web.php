@@ -1,6 +1,7 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\admin\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+
+Route::get('/question', [QuestionController::class,'index'])->name('dashboard.index');
+Route::post('/question', [QuestionController::class,'save'])->name('dashboard.save');
