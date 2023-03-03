@@ -51,6 +51,6 @@ Route::post('/check', [QuestionController::class,'check'])->name('question.check
 
 //-----------------------Game Master------------------------
 //Next question
-//Required Body{'id'}
+//Required Body{'id'} 
 Route::post('/next', [GuestController::class,'next'])->name('guest.next');
 // ----------------------------------------------------------
