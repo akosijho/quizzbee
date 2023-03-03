@@ -1,4 +1,4 @@
-# quizbee_game_master
+# game_challenger
 
 A new Flutter project.
 
