@@ -23,7 +23,7 @@ class ParticipantController extends Controller
     {
         $data = [
             'name' => $request->name,
-            'score' => $request->score
+            'score' => 0
         ];
        $id = $this->participant->saveParticipant($data);
         return response()->json($id);

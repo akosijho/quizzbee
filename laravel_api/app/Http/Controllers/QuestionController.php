@@ -27,7 +27,7 @@ class QuestionController extends Controller
         $data = $this->question->checkQuestion($request->answer);
         if ($data) 
         {
-            DB::table('participants')->whereid($request->increment)->increment('score', 2);
+            DB::table('participants')->whereid($request->id)->increment('score', 2);
             return response()->json("you are correct");
         }
         else{

@@ -23,15 +23,34 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//participant
+
+
+
+
+
+
+//-----------------------participant---------------------
+//leaderboards-Vue.js
 Route::get('/participant', [ParticipantController::class,'index'])->name('participant.index');
+
+//Save Participants-flutter
+//Required Body{'name'}
 Route::post('/participant', [ParticipantController::class,'save'])->name('participant.save');
+// ----------------------------------------------------------
 
 
-//question
+//-----------------------Question------------------------
+//Display Question and choices - flutter
 Route::get('/question', [QuestionController::class,'index'])->name('question.index');
+
+//Answer Checker - flutter
+// Required Body{'answer','id'}
 Route::post('/check', [QuestionController::class,'check'])->name('question.check');
+// ----------------------------------------------------------
 
 
-//guest
+//-----------------------Game Master------------------------
+//Next question
+//Required Body{'id'}
 Route::post('/next', [GuestController::class,'next'])->name('guest.next');
+// ----------------------------------------------------------
