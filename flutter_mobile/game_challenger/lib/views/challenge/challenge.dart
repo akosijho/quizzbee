@@ -7,7 +7,15 @@ class Challenge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(),
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Challenger Id"),
+            Text("Points")
+          ],
+        ),
+      ),
       body: BuildBody(),
     );
   }
