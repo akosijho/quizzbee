@@ -11,6 +11,7 @@ class OptionBuilder extends ViewModelWidget<ChallengeViewModel> {
     return GestureDetector(
         onTap: () async {
           // await viewModel.nav.pushReplacementNamed(Routes.register);
+          viewModel.locked();
         },
         child: Container(
           // width: double.infinity,
