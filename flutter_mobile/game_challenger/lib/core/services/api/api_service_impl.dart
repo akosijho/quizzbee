@@ -41,7 +41,7 @@ class ApiServiceImpl implements ApiService {
     try {
       final response = await dio.get('/participant/$id');
       if (response.statusCode == 200 && response.data != null) {
-        return (response.data as Map<String,dynamic>)['score'];
+        return (response.data as Map<String, dynamic>)['score'];
       }
     } catch (e) {
       rethrow;
@@ -73,6 +73,15 @@ class ApiServiceImpl implements ApiService {
       rethrow;
     }
     return null;
-    // return null;
+  }
+
+  @override
+  Future<void> checkAnswer(String answer, String id) async {
+    final body = {"answer": answer, "id": id};
+    try {
+      await dio.post('/question', data: body);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

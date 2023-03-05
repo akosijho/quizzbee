@@ -11,4 +11,7 @@ abstract class ApiService{
 
   //getquestion
   Future<List<Question>?> getQuestion();
+
+  //  answer checking
+  Future<void> checkAnswer(String answer, String id);
 }

@@ -22,6 +22,7 @@ class ChallengeViewModel extends AppViewModel {
   void init() async {
     challenge.choice!.shuffle();
     getPoints();
+    getChallenge();
     notifyListeners();
   }
 
@@ -45,7 +46,6 @@ class ChallengeViewModel extends AppViewModel {
     }
   }
 
-  @override
   void getChallenge() async {
     setBusy(true);
     try {

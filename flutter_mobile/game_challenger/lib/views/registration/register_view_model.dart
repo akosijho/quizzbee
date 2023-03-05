@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:game_challenger/app/app.locator.dart';
 import 'package:game_challenger/app/app.router.dart';
 import 'package:game_challenger/app/app_view_model.dart';
 import 'package:game_challenger/core/models/challenge.dart';
@@ -13,12 +14,20 @@ class RegisterViewModel extends AppViewModel {
   List<Question>? temp;
   Question? challenge;
 
+  final app = locator<AppViewModel>();
   int? playerPoints;
 
   TextEditingController name = TextEditingController();
 
   void init() async {
-    getChallenge();
+    await getChallenge();
+
+    app.currentPlayer = await app.shared.getUser();
+    if (app.currentPlayer != null) {
+      await app.nav.pushReplacementNamed(Routes.challenge,
+          arguments: ChallengeArguments(
+              challenge: challenge!, player: app.currentPlayer!));
+    }
   }
 
   bool isStarted = false;
@@ -76,17 +85,16 @@ class RegisterViewModel extends AppViewModel {
     }
   }
 
-  void getChallenge() async {
-    setBusy(true);
+  Future<Question?> getChallenge() async {
     try {
       temp = await api.getQuestion();
       if (temp != null) {
-        challenge = temp![0];
+       return challenge = temp![0];
       }
     } on DioError catch (e) {
       connectionResponse(e);
       rethrow;
     }
-    setBusy(false);
+    return null;
   }
 }
