@@ -33,5 +33,6 @@ class RegisterViewModel extends AppViewModel {
     //         )).then((value) => null);
 
     nav.pushReplacementNamed(Routes.challenge);
+
   }
 }
