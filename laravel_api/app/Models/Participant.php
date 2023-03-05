@@ -19,4 +19,9 @@ class Participant extends Model
     {
         return $this->insertGetId($data);
     }
+
+    public function pointsParticipant($id)
+    {
+        return $this->select('score')->whereid($id)->get();
+    }
 }

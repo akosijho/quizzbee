@@ -16,5 +16,5 @@ use App\Http\Controllers\admin\QuestionController;
 
 
 
-Route::get('/question', [QuestionController::class,'index'])->name('dashboard.index');
-Route::post('/question', [QuestionController::class,'save'])->name('dashboard.save');
+Route::get('/question', [QuestionController::class,'index'])->name('question.index');
+Route::post('/question', [QuestionController::class,'save'])->name('question.save');

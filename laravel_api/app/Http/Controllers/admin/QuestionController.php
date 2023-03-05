@@ -42,6 +42,6 @@ class QuestionController extends Controller
             $this->choice->addChoice($choices);
 
         }
-        return redirect()->route('dashboard.index');
+        return redirect()->route('question.index');
     }
 }
