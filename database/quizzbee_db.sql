@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 03, 2023 at 06:57 AM
+-- Generation Time: Mar 05, 2023 at 01:05 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -40,11 +40,7 @@ CREATE TABLE `choices` (
 --
 
 INSERT INTO `choices` (`id`, `choices`, `question_id`, `created_at`, `updated_at`) VALUES
-(13, 'a. ako', 11, '2023-03-02 01:37:14', '2023-03-02 01:37:14'),
-(14, 'b. siya', 11, '2023-03-02 01:37:14', '2023-03-02 01:37:14'),
-(15, 'c. kami', 11, '2023-03-02 01:37:14', '2023-03-02 01:37:14'),
-(16, 'a.siya', 12, '2023-03-02 01:49:41', '2023-03-02 01:49:41'),
-(17, 'asdasd', 13, '2023-03-02 02:06:44', '2023-03-02 02:06:44');
+(13, 'a. ako', 11, '2023-03-02 01:37:14', '2023-03-02 01:37:14');
 
 -- --------------------------------------------------------
 
@@ -86,7 +82,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (5, '2023_02_27_071900_create_questions_table', 1),
 (6, '2023_02_27_071952_create_choices_table', 1),
 (7, '2023_02_27_072026_create_participants_table', 1),
-(8, '2023_03_01_111258_add_status_to_questions_table', 2);
+(8, '2023_03_01_111258_add_status_to_questions_table', 2),
+(9, '2023_03_05_102331_create_statuses_table', 3);
 
 -- --------------------------------------------------------
 
@@ -127,7 +124,9 @@ INSERT INTO `participants` (`id`, `name`, `score`, `created_at`, `updated_at`) V
 (35, 'dgfgff cxxcxcx', 0, NULL, NULL),
 (36, 'asasas assssss', 0, NULL, NULL),
 (37, 'sssssssss zzzzzzzzzzzz', 0, NULL, NULL),
-(38, 'ssssssd xxxxxxxxxx', 0, NULL, NULL);
+(38, 'ssssssd xxxxxxxxxx', 0, NULL, NULL),
+(39, 'asdasdggg', 0, NULL, NULL),
+(40, 'asdasdasd', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -180,9 +179,27 @@ CREATE TABLE `questions` (
 --
 
 INSERT INTO `questions` (`id`, `question`, `answer`, `created_at`, `updated_at`, `status`) VALUES
-(11, 'Who is the father of computer', '1', NULL, NULL, '1'),
-(12, 'who is nicole?', '2', NULL, NULL, '1'),
-(13, 'asdasdsad', '1', NULL, NULL, '1');
+(11, 'Who is the father of computer', 'a', NULL, NULL, '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `statuses`
+--
+
+CREATE TABLE `statuses` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `statuses`
+--
+
+INSERT INTO `statuses` (`id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -252,6 +269,12 @@ ALTER TABLE `questions`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `statuses`
+--
+ALTER TABLE `statuses`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -266,7 +289,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `choices`
 --
 ALTER TABLE `choices`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -278,13 +301,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `participants`
 --
 ALTER TABLE `participants`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -296,7 +319,13 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `statuses`
+--
+ALTER TABLE `statuses`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
