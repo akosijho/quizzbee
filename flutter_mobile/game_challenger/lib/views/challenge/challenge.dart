@@ -13,47 +13,51 @@ class Challenge extends StatelessWidget {
     return ViewModelBuilder<ChallengeViewModel>.reactive(
         viewModelBuilder: () => ChallengeViewModel(),
         builder: (context, model, child) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [Text("Challenger Id"), Text("Points")],
+          return SafeArea(
+            child: Scaffold(
+              resizeToAvoidBottomInset: true,
+              extendBody: true,
+              appBar: AppBar(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [Text("Challenger Id"), Text("Points")],
+                ),
               ),
-            ),
-            body: BuildBody(
-              child: Column(
-                children: [
-                  const Align(
-                    alignment: Alignment.topLeft,
-                    child: Text("Place: 1"),
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "This is a question",
-                            overflow: TextOverflow.clip,
-                          ),
-                          const SizedBox(
-                            height: 48,
-                          ),
-                          for (int i = 1; i < 5; i++)
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              mainAxisSize: MainAxisSize.max,
-                              children: const [
-                                OptionBuilder(),
-                                HGap08(),
-                              ],
+              body: BuildBody(
+                child: Column(
+                  children: [
+                    const Align(
+                      alignment: Alignment.topLeft,
+                      child: Text("Place: 1"),
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "This is a question",
+                              overflow: TextOverflow.clip,
                             ),
-                        ],
+                            const SizedBox(
+                              height: 38,
+                            ),
+                            for (int i = 1; i < 5; i++)
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisSize: MainAxisSize.max,
+                                children: const [
+                                  OptionBuilder(),
+                                  HGap08(),
+                                ],
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

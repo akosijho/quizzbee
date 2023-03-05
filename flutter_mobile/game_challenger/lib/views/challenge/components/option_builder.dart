@@ -9,7 +9,9 @@ class OptionBuilder extends ViewModelWidget<ChallengeViewModel> {
   @override
   Widget build(BuildContext context, ChallengeViewModel viewModel) {
     return GestureDetector(
-        onTap: () {},
+        onTap: () async {
+          // await viewModel.nav.pushReplacementNamed(Routes.register);
+        },
         child: Container(
           // width: double.infinity,
           height: 56,
