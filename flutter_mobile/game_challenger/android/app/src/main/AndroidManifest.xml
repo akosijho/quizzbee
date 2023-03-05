@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.quizbee_game_master">
+    package="com.example.game_challenger">
    <application
-        android:label="quizbee_game_master"
+        android:label="game_challenger"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
