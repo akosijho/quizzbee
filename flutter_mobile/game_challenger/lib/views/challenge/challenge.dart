@@ -5,14 +5,19 @@ import 'package:game_challenger/views/widgets/build_body.dart';
 import 'package:game_challenger/views/widgets/height_gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
+import 'package:game_challenger/core/models/challenge.dart';
 
 class Challenge extends StatelessWidget {
-  const Challenge({super.key});
+  const Challenge({required this.challenge, super.key});
+
+  final Question challenge;
+
+  // final Player player;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ChallengeViewModel>.reactive(
-        viewModelBuilder: () => ChallengeViewModel(),
+        viewModelBuilder: () => ChallengeViewModel(challenge: challenge),
         builder: (context, model, child) {
           return SafeArea(
             bottom: true,
@@ -41,21 +46,23 @@ class Challenge extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
-                                "This is a question",
+                              Text(
+                                model.challenge.question!,
                                 overflow: TextOverflow.clip,
                               ),
                               const SizedBox(
                                 height: 38,
                               ),
-                              for (int i = 1; i < 5; i++)
+                              for (var i in model.challenge.choice!)
                                 Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   mainAxisSize: MainAxisSize.max,
-                                  children: const [
-                                    OptionBuilder(),
-                                    HGap08(),
+                                  children: [
+                                    OptionBuilder(
+                                      choice: i,
+                                    ),
+                                    const HGap08(),
                                   ],
                                 ),
                             ],

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:game_challenger/core/models/challenge.dart';
 import 'package:game_challenger/utils/my_colors.dart';
 import 'package:game_challenger/views/challenge/challenge_view_model.dart';
 import 'package:stacked/stacked.dart';
 
 class OptionBuilder extends ViewModelWidget<ChallengeViewModel> {
-  const OptionBuilder({Key? key}) : super(key: key);
+  const OptionBuilder({required this.choice, Key? key}) : super(key: key);
+
+  final Option choice;
 
   @override
   Widget build(BuildContext context, ChallengeViewModel viewModel) {
     return GestureDetector(
         onTap: () async {
           // await viewModel.nav.pushReplacementNamed(Routes.register);
-          viewModel.locked();
+          viewModel.locked(choice, viewModel.challenge.choice!.indexOf(choice));
         },
         child: Container(
           // width: double.infinity,
@@ -32,7 +35,7 @@ class OptionBuilder extends ViewModelWidget<ChallengeViewModel> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "This is a choice",
+                choice.choices!,
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
@@ -42,22 +45,25 @@ class OptionBuilder extends ViewModelWidget<ChallengeViewModel> {
               const SizedBox(
                 width: 16,
               ),
-              // Icon(
-              //   Icons.check_circle,
-              //   size: 24,
-              //   color: const Color(0xff31cb00).withOpacity(0.9),
-              // )
-              Container(
-                width: 24,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.red),
-                child: const Icon(
-                  Icons.close_rounded,
-                  size: 16,
-                  color: Colors.white,
-                ),
-              )
+              viewModel.index == viewModel.challenge.choice!.indexOf(choice)
+                  ? viewModel.correct
+                      ? Icon(
+                          Icons.check_circle,
+                          size: 24,
+                          color: const Color(0xff31cb00).withOpacity(0.9),
+                        )
+                      : Container(
+                          width: 24,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.red),
+                          child: const Icon(
+                            Icons.close_rounded,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                        )
+                  : const SizedBox.shrink()
             ],
           ),
         ));

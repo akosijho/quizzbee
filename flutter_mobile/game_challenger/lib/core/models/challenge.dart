@@ -1,60 +1,44 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 
-class Challenge extends Equatable {
-  final String? id;
+class Question extends Equatable {
+  final int? id;
   final String? question;
+  final String? answer;
+  final String? status;
+  final List<Option>? choice;
 
-  final List<Option>? options;
-
-  const Challenge({this.id, this.question, this.options});
+  const Question(
+      {this.id, this.question, this.choice, this.status, this.answer});
 
   @override
-  List<Object?> get props => [id, question, options];
+  List<Object?> get props => [id, question, choice, status, answer];
+
+  factory Question.fromJson(Map<String, dynamic> json) {
+    return Question(
+        id: json["id"] as int?,
+        question: json['question'] as String?,
+        status: json['status'] as String?,
+        choice: json['choices'] as List<Option>?,
+        answer: json['answer']);
+  }
 }
 
 class Option extends Equatable {
-  final String text;
-  final bool isCorrect;
+  final int? id;
+  final String? choices;
+  final int? questionId;
+  final bool? isCorrect;
 
-  const Option({
-    required this.text,
-    this.isCorrect = false,
-  });
-
-  @override
-  List<Object> get props => [text, isCorrect];
-
-  Option copyWith({
-    String? text,
-    bool? isCorrect,
-  }) {
-    return Option(
-      text: text ?? this.text,
-      isCorrect: isCorrect ?? this.isCorrect,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'text': text,
-      'isCorrect': isCorrect,
-    };
-  }
-
-  factory Option.fromMap(Map<String, dynamic> map) {
-    return Option(
-      text: map['text'] as String,
-      isCorrect: map['isCorrect'] as bool,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Option.fromJson(String source) =>
-      Option.fromMap(json.decode(source) as Map<String, dynamic>);
+  const Option(
+      {this.id, this.isCorrect = false, this.choices, this.questionId});
 
   @override
-  bool get stringify => true;
+  List<Object?> get props => [id, choices, questionId, isCorrect];
+
+  factory Option.fromJson(Map<String, dynamic> json) {
+    return Option(
+        id: json['id'] as int?,
+        questionId: json['question_id'] as int?,
+        choices: json['choices'] as String?);
+  }
 }

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:game_challenger/app/app.router.dart';
 import 'package:game_challenger/app/app_view_model.dart';
+import 'package:game_challenger/core/models/challenge.dart';
 import 'package:game_challenger/views/widgets/conection_response.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -9,10 +10,16 @@ import 'package:lottie/lottie.dart';
 class RegisterViewModel extends AppViewModel {
   var formKey = GlobalKey<FormState>();
   var isLoading = false;
+  List<Question>? temp;
+  Question? challenge;
+
+  int? playerPoints;
 
   TextEditingController name = TextEditingController();
 
-  void init() async {}
+  void init() async {
+    getChallenge();
+  }
 
   bool isStarted = false;
 
@@ -29,6 +36,7 @@ class RegisterViewModel extends AppViewModel {
     setBusy(true);
     try {
       currentPlayer = await api.register(name);
+      playerPoints = await api.playerPoints(currentPlayer!.id!);
       print(currentPlayer.toString());
       // wait();
     } on DioError catch (e) {
@@ -61,5 +69,21 @@ class RegisterViewModel extends AppViewModel {
     } else {
       await nav.pushReplacementNamed(Routes.challenge);
     }
+  }
+
+  void getChallenge() async {
+    setBusy(true);
+    try {
+      temp = await api.getQuestion();
+      if (temp != null) {
+        challenge = temp![0];
+        await nav.pushReplacementNamed(Routes.challenge,
+            arguments: ChallengeArguments(challenge: challenge!));
+      }
+    } on DioError catch (e) {
+      connectionResponse(e);
+      rethrow;
+    }
+    setBusy(false);
   }
 }
