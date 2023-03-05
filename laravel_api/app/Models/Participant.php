@@ -22,6 +22,6 @@ class Participant extends Model
 
     public function pointsParticipant($id)
     {
-        return $this->select('score')->whereid($id)->get();
+        return $this->select('score')->whereid($id)->first();
     }
 }

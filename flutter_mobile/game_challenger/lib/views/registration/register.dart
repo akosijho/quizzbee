@@ -55,9 +55,7 @@ class Register extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10)),
                           child: TextButton(
                               onPressed: () {
-                                // model.submit();
-                                // model.register(model.name.value.text);
-                                model.init();
+                                model.register(model.name.value.text);
                               },
                               child: Center(
                                 child: model.isBusy

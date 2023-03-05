@@ -26,22 +26,28 @@ class ParticipantController extends Controller
 
     public function save(Request $request)
     {
-        $data = $this->status->getStatus();
-
-        if ($data['status'] == 0)
-        {
-            return response()->json('The game has not yet started');
-        }
-
-        else
-        {
-            $data = [
+        $data = [
             'name' => $request->name,
             'score' => 0
              ];
             $id = $this->participant->saveParticipant($data);
             return response()->json($id);
-        }
+        // $data = $this->status->getStatus();
+
+        // if ($data['status'] == 0)
+        // {
+        //     return response()->json('The game has not yet started');
+        // }
+
+        // else
+        // {
+        //     $data = [
+        //     'name' => $request->name,
+        //     'score' => 0
+        //      ];
+        //     $id = $this->participant->saveParticipant($data);
+        //     return response()->json($id);
+        // }
 
     }
 
@@ -52,6 +58,6 @@ class ParticipantController extends Controller
     public function points($id)
     {
         $data = $this->participant->pointsParticipant($id);
-        return response()->json($data);
+        return response($data);
     }
 }

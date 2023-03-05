@@ -27,8 +27,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       onReady: () async {
         app.currentPlayer = await app.shared.getUser();
+        app.getChallenge();
         if (app.currentPlayer != null) {
-          app.nav.pushReplacementNamed(Routes.challenge);
+          app.nav.pushReplacementNamed(Routes.challenge,
+              arguments: ChallengeArguments(
+                  challenge: app.challenge!, player: app.currentPlayer!));
         }
       },
     );

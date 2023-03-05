@@ -33,12 +33,17 @@ class RegisterViewModel extends AppViewModel {
   }
 
   void register(String name) async {
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
     setBusy(true);
     try {
       currentPlayer = await api.register(name);
-      playerPoints = await api.playerPoints(currentPlayer!.id!);
-      print(currentPlayer.toString());
       // wait();
+      await nav.pushReplacementNamed(Routes.challenge,
+          arguments: ChallengeArguments(
+              challenge: challenge!, player: currentPlayer!));
     } on DioError catch (e) {
       connectionResponse(e);
       rethrow;
@@ -77,8 +82,6 @@ class RegisterViewModel extends AppViewModel {
       temp = await api.getQuestion();
       if (temp != null) {
         challenge = temp![0];
-        await nav.pushReplacementNamed(Routes.challenge,
-            arguments: ChallengeArguments(challenge: challenge!));
       }
     } on DioError catch (e) {
       connectionResponse(e);

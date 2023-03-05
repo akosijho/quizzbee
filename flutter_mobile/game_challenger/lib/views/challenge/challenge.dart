@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_challenger/core/models/player.dart';
 import 'package:game_challenger/views/challenge/challenge_view_model.dart';
 import 'package:game_challenger/views/challenge/components/option_builder.dart';
 import 'package:game_challenger/views/widgets/build_body.dart';
@@ -8,16 +9,17 @@ import 'package:stacked/stacked.dart';
 import 'package:game_challenger/core/models/challenge.dart';
 
 class Challenge extends StatelessWidget {
-  const Challenge({required this.challenge, super.key});
+  const Challenge({required this.challenge, required this.player, super.key});
 
   final Question challenge;
 
-  // final Player player;
+  final Player player;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ChallengeViewModel>.reactive(
-        viewModelBuilder: () => ChallengeViewModel(challenge: challenge),
+        viewModelBuilder: () =>
+            ChallengeViewModel(challenge: challenge, player: player),
         builder: (context, model, child) {
           return SafeArea(
             bottom: true,
@@ -30,7 +32,10 @@ class Challenge extends StatelessWidget {
                 appBar: AppBar(
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [Text("Challenger Id"), Text("Points")],
+                    children: [
+                      Text("Id: ${model.player.id}"),
+                      Text(model.playerPoints.toString())
+                    ],
                   ),
                 ),
                 body: BuildBody(

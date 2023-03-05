@@ -39,9 +39,9 @@ class ApiServiceImpl implements ApiService {
   @override
   Future<int?> playerPoints(String id) async {
     try {
-      final response = await dio.post('/participant/$id');
+      final response = await dio.get('/participant/$id');
       if (response.statusCode == 200 && response.data != null) {
-        return response.data;
+        return (response.data as Map<String,dynamic>)['score'];
       }
     } catch (e) {
       rethrow;
