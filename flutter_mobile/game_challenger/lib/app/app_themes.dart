@@ -3,7 +3,7 @@ import 'package:game_challenger/utils/my_colors.dart';
 
 class AppThemes {
   static ThemeData dark = ThemeData(
-    fontFamily: "Comfortaa",
+    fontFamily: "rimouski",
     scaffoldBackgroundColor: MyColors.scaffoldBg,
     primaryColor: MyColors.primary,
     //primaryColor: Colors.black,
@@ -105,7 +105,7 @@ class AppThemes {
   );
 
   static ThemeData light = ThemeData(
-    fontFamily: "SF-Pro",
+    fontFamily: "rimouski",
     scaffoldBackgroundColor: Colors.white,
     disabledColor: MyColors.myGray,
     brightness: Brightness.light,

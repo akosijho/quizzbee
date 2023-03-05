@@ -98,6 +98,10 @@ flutter:
             weight: 600
           - asset: assets/fonts/Comfortaa-Bold.ttf
             weight: 700
+      - family: rimouski
+        fonts:
+            - asset: assets/fonts/rimouski.otf
+              weight: 400
   # fonts:
   #   - family: Schyler
   #     fonts:
