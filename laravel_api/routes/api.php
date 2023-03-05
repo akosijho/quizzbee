@@ -39,7 +39,7 @@ Route::post('/participant', [ParticipantController::class,'save'])->name('partic
 // ----------------------------------------------------------
 
 
-//-----------------------Question------------------------
+//-----------------------Question---------------------
 //Display Question and choices - flutter
 Route::get('/question', [QuestionController::class,'index'])->name('question.index');
 
