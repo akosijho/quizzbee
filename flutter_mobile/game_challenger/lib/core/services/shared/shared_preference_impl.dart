@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @LazySingleton(as: SharedPreference)
-class SharedPreferenceImpl implements SharedPreference{
+class SharedPreferenceImpl implements SharedPreference {
   @override
   Future<void> setUser(Player player) async {
     final sharePref = await SharedPreferences.getInstance();
@@ -14,12 +14,14 @@ class SharedPreferenceImpl implements SharedPreference{
   }
 
   @override
-  Future<Player> getUser() async {
+  Future<Player?> getUser() async {
     final sharePref = await SharedPreferences.getInstance();
     final String? value = sharePref.getString('PLAYER_PREF_KEY');
-
-    final jsonFile = json.decode(value!);
-    final player = Player.fromJson(jsonFile as Map<String, dynamic>);
-    return player;
+    if (value != null) {
+      final jsonFile = json.decode(value);
+      final player = Player.fromJson(jsonFile as Map<String, dynamic>);
+      return player;
+    }
+    return null;
   }
 }

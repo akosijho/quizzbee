@@ -10,6 +10,7 @@ class Register extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<RegisterViewModel>.reactive(
         viewModelBuilder: () => RegisterViewModel(),
+        onViewModelReady: (model) => model.init(),
         builder: (context, model, child) => Scaffold(
               body: BuildBody(
                 child: Container(
@@ -28,6 +29,7 @@ class Register extends StatelessWidget {
                         SizedBox(
                           height: 56,
                           child: TextFormField(
+                            controller: model.name,
                             decoration: InputDecoration(
                                 hintText: "Enter you name",
                                 border: OutlineInputBorder(
@@ -38,9 +40,9 @@ class Register extends StatelessWidget {
                               }
                               return null;
                             },
-                            // onChanged: (value){
-                            //   model.submit();
-                            // },
+                            onChanged: (value) {
+                              model.submit();
+                            },
                           ),
                         ),
                         const SizedBox(
@@ -54,6 +56,7 @@ class Register extends StatelessWidget {
                           child: TextButton(
                               onPressed: () {
                                 model.submit();
+                                model.register(model.name.value.text);
                               },
                               child: Center(
                                 child: model.isBusy

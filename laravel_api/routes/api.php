@@ -43,6 +43,9 @@ Route::post('/participant', [ParticipantController::class,'save'])->name('partic
 //Display Question and choices - flutter
 Route::get('/question', [QuestionController::class,'index'])->name('question.index');
 
+// get question ids
+Route::get('/question_indexes', [QuestionController::class, 'getQuestionIds'])->name('question.ids');
+
 //Answer Checker - flutter
 // Required Body{'answer','id'}
 // answer sa player 
