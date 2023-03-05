@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\QuestionnareController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\StatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,15 +49,40 @@ Route::get('/question_indexes', [QuestionController::class, 'getQuestionIds'])->
 
 //Answer Checker - flutter
 // Required Body{'answer','id'}
-// answer sa player 
+// answer sa player
 //  id sa player
 Route::post('/check', [QuestionController::class,'check'])->name('question.check');
 // ----------------------------------------------------------
 
 
+
+
+
+
+// ------------------------points--------------------------
+//Display points - flutter
+//Required Parameter{'id'} - challenger id
+Route::get('/participant/{id}', [ParticipantController::class,'points'])->name('participant.points');
+// --------------------------------------------------------
+
+
+
+
+
+//-----------------------Start or Stop------------------------
+//Start or Stop - flutter
+Route::post('/status', [StatusController::class,'status'])->name('status');
+// ----------------------------------------------------------
+
+
+
+
+
+
+
 //-----------------------Game Master------------------------
 //Next question
-//Required Body{'id'} 
+//Required Body{'id'}
 // id sa question
 Route::post('/next', [GuestController::class,'next'])->name('guest.next');
 // ----------------------------------------------------------
