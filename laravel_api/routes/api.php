@@ -45,6 +45,8 @@ Route::get('/question', [QuestionController::class,'index'])->name('question.ind
 
 //Answer Checker - flutter
 // Required Body{'answer','id'}
+// answer sa player 
+//  id sa player
 Route::post('/check', [QuestionController::class,'check'])->name('question.check');
 // ----------------------------------------------------------
 
@@ -52,5 +54,6 @@ Route::post('/check', [QuestionController::class,'check'])->name('question.check
 //-----------------------Game Master------------------------
 //Next question
 //Required Body{'id'} 
+// id sa question
 Route::post('/next', [GuestController::class,'next'])->name('guest.next');
 // ----------------------------------------------------------
