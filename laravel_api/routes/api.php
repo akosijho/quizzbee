@@ -69,7 +69,8 @@ Route::get('/participant/{id}', [ParticipantController::class,'points'])->name('
 // --------------------------------------------------------
 
 
-
+//Start or Stop - flutter
+Route::post('/status', [StatusController::class,'status'])->name('status');
 
 
 
@@ -78,10 +79,6 @@ Route::get('/participant/{id}', [ParticipantController::class,'points'])->name('
 //Next question
 //Required Body{'id'} 
 Route::post('/next', [GuestController::class,'next'])->name('guest.next');
-
-
-//Start or Stop - flutter
-Route::post('/status', [StatusController::class,'status'])->name('status');
 // ----------------------------------------------------------
 
 
