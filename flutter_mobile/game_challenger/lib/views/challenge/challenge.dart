@@ -20,6 +20,7 @@ class Challenge extends StatelessWidget {
     return ViewModelBuilder<ChallengeViewModel>.reactive(
         viewModelBuilder: () =>
             ChallengeViewModel(challenge: challenge, player: player),
+        onViewModelReady: (model) => model.init(),
         builder: (context, model, child) {
           return SafeArea(
             bottom: true,

@@ -28,7 +28,6 @@ class ChallengeViewModel extends AppViewModel {
 
   void locked(Option o, int choiceIndex) async {
     index = choiceIndex;
-    print(index);
     if (isLocked == false) {
       if (challenge.answer == choiceChecker(challenge.choice!.indexOf(o))) {
         correct = true;
@@ -36,6 +35,8 @@ class ChallengeViewModel extends AppViewModel {
         try {
           await api.checkAnswer(
               choiceChecker(challenge.choice!.indexOf(o)), player.id!);
+          playerPoints = (await api.playerPoints(player.id!)) ?? 0;
+          notifyListeners();
         } on DioError catch (e) {
           connectionResponse(e);
           rethrow;
@@ -68,7 +69,7 @@ class ChallengeViewModel extends AppViewModel {
 
   void getPoints() async {
     try {
-      playerPoints = (await api.playerPoints(currentPlayer!.id!)) ?? 0;
+      playerPoints = (await api.playerPoints(player.id!)) ?? 0;
     } on DioError catch (e) {
       connectionResponse(e);
       rethrow;
