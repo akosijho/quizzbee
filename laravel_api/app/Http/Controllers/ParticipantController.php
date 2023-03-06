@@ -26,24 +26,36 @@ class ParticipantController extends Controller
 
     public function save(Request $request)
     {
-        $data = $this->status->getStatus();
+        $data2 = $this->status->getWaitingRoom();
 
-        if ($data['status'] == 0)
-        {
-            return response()->json('The game has not yet started');
-        }
-
-        else
+    
+        if ($data2['waiting_room'] == 0)
         {
             $data = [
             'name' => $request->name,
             'score' => 0
              ];
             $id = $this->participant->saveParticipant($data);
-            return response()->json($id);
+            return response()->json(['id' => $id, 'message' => 'Waiting for the game master to start the game']);
+        }
+        else
+        {
+            
+            $data = [
+            'name' => $request->name,
+            'score' => 0
+             ];
+            $id = $this->participant->saveParticipant($data);
+            return response()->json(['id' => $id, 'message' => 'no message']);
         }
 
     }
+
+
+   
+
+
+
 
 
 

@@ -72,24 +72,29 @@ Route::get('/participant/{id}', [ParticipantController::class,'points'])->name('
 
 
 
-//-----------------------Start or Stop------------------------
-//Start or Stop - flutter
-Route::post('/status', [StatusController::class,'status'])->name('status');
-// ----------------------------------------------------------
-
-
-
-
-
 
 
 //-----------------------Game Master------------------------
 //Next question
 //Required Body{'id'} 
 Route::post('/next', [GuestController::class,'next'])->name('guest.next');
+
+
+//Start or Stop - flutter
+Route::post('/status', [StatusController::class,'status'])->name('status');
+
+
+
+Route::post('/waiting_room', [StatusController::class,'waiting_room'])->name('waiting_room');
 // ----------------------------------------------------------
 
 
 
 
 
+
+
+
+
+
+Route::get('/getresponse', [StatusController::class,'getWaitingRoom'])->name('get_waiting_room');

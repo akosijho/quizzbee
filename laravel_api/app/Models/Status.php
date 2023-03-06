@@ -14,4 +14,9 @@ class Status extends Model
     {
         return $this->select('status')->first();
     }
+
+    public function getWaitingRoom()
+    {
+        return $this->select('waiting_room')->first();
+    }
 }

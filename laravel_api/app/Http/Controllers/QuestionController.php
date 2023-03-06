@@ -36,6 +36,13 @@ class QuestionController extends Controller
 
     }
 
+    //  public function getResponseQuestion()
+    // {
+    //      $status = DB::table('questions')->whereid(1)->first();
+    //      return response()->json($status['id']);
+    // }
+    
+
 
 
 
