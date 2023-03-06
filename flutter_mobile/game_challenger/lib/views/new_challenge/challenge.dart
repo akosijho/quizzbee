@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_challenger/core/models/player.dart';
-import 'package:game_challenger/views/challenge/challenge_view_model.dart';
-import 'package:game_challenger/views/challenge/components/option_builder.dart';
+import 'package:game_challenger/views/new_challenge/challenge_view_model.dart';
+import 'package:game_challenger/views/new_challenge/components/option_builder.dart';
 import 'package:game_challenger/views/widgets/build_body.dart';
 import 'package:game_challenger/views/widgets/height_gap.dart';
 import 'package:lottie/lottie.dart';
@@ -17,9 +17,9 @@ class NewChallenge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ChallengeViewModel>.reactive(
+    return ViewModelBuilder<NewChallengeViewModel>.reactive(
         viewModelBuilder: () =>
-            ChallengeViewModel(challenge: challenge, player: player),
+            NewChallengeViewModel(challenge: challenge, player: player),
         onViewModelReady: (model) => model.init(),
         builder: (context, model, child) {
           return SafeArea(

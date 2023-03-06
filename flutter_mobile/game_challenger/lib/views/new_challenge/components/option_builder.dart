@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:game_challenger/core/models/challenge.dart';
 import 'package:game_challenger/utils/my_colors.dart';
-import 'package:game_challenger/views/challenge/challenge_view_model.dart';
+import 'package:game_challenger/views/new_challenge/challenge_view_model.dart';
 import 'package:stacked/stacked.dart';
 
-class OptionBuilder extends ViewModelWidget<ChallengeViewModel> {
+class OptionBuilder extends ViewModelWidget<NewChallengeViewModel> {
   const OptionBuilder({required this.choice, Key? key}) : super(key: key);
 
   final Option choice;
 
   @override
-  Widget build(BuildContext context, ChallengeViewModel viewModel) {
+  Widget build(BuildContext context, NewChallengeViewModel viewModel) {
     return GestureDetector(
         onTap: () async {
           // await viewModel.nav.pushReplacementNamed(Routes.register);

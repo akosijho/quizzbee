@@ -27,18 +27,9 @@ class NewChallengeViewModel extends AppViewModel {
   void init() async {
     challenge.choice!.shuffle();
     getPoints();
-    // while(true){
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) async {
-      await getChallenge();
-      if (challenge.status != next!.status) {
-        print(next);
-        await nav.pushReplacementNamed(Routes.challenge,
-            arguments: ChallengeArguments(challenge: next!, player: player));
-        notifyListeners();
-      }
-      notifyListeners();
+    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      getChallenge();
     });
-    // }
     notifyListeners();
   }
 
@@ -73,11 +64,18 @@ class NewChallengeViewModel extends AppViewModel {
     // setBusy(true);
     try {
       var temp = await api.getQuestion();
-      if (temp != null) {
+      if (temp != null && temp.isNotEmpty) {
         next = temp[0];
-        _timer!.cancel();
-        notifyListeners();
+        print(next);
+        if (challenge != next) {
+
+          _timer!.cancel();
+          nav.pushReplacementNamed(Routes.challenge,
+              arguments:
+              ChallengeArguments(challenge: next!, player: player));
+        }
       } else {
+        _timer!.cancel();
         print('finished');
       }
     } on DioError catch (e) {

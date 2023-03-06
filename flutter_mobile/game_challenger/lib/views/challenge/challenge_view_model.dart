@@ -64,15 +64,17 @@ class ChallengeViewModel extends AppViewModel {
     // setBusy(true);
     try {
       var temp = await api.getQuestion();
-      if (temp != null) {
+      if (temp != null && temp.isNotEmpty) {
         next = temp[0];
         print(next);
         if (challenge != next) {
+          _timer!.cancel();
           nav.pushReplacementNamed(Routes.new_challenge,
               arguments:
                   NewChallengeArguments(challenge: next!, player: player));
         }
       } else {
+        _timer!.cancel();
         print('finished');
       }
     } on DioError catch (e) {

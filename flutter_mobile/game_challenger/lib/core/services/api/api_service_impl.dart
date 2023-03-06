@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:game_challenger/app/app.locator.dart';
 import 'package:game_challenger/core/models/challenge.dart';
@@ -18,7 +20,14 @@ class ApiServiceImpl implements ApiService {
   Dio dio = Dio(options)
     ..options.headers.addEntries([
       const MapEntry('accept', 'application/json'),
-    ]);
+    ])
+  ..interceptors.add(RetryInterceptor(
+    dio: Dio(options),
+    maxRetries: 3,
+    retryOnException: (e) => e is SocketException || e is HttpException || e is DioError && e.response?.statusCode == 429,
+  ));
+
+
 
   @override
   Future<Player?> register(String name) async {
@@ -98,5 +107,38 @@ class ApiServiceImpl implements ApiService {
     } catch (e) {
       rethrow;
     }
+  }
+}
+
+class RetryInterceptor extends Interceptor {
+  final Dio dio;
+  final int maxRetries;
+  final bool Function(dynamic error) retryOnException;
+
+  RetryInterceptor({required this.dio, this.maxRetries = 3, required this.retryOnException});
+
+  @override
+  Future onError(DioError err, ErrorInterceptorHandler handler) async {
+    if (retryOnException(err)) {
+      int retries = 0;
+      while (retries < maxRetries) {
+        try {
+          // Calculate a delay using exponential backoff
+          final delay = Duration(seconds: (1 ^ retries) * 1);
+
+          // Wait before retrying the request
+          await Future.delayed(delay);
+
+          // Make the request again
+          final options = err.requestOptions;
+          final response = await dio.request(options.path);
+          return response;
+        } catch (e) {
+          retries++;
+          print('Retry failed ($retries): $e');
+        }
+      }
+    }
+    return super.onError(err, handler);
   }
 }
