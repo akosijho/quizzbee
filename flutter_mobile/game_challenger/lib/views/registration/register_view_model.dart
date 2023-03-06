@@ -33,6 +33,8 @@ class RegisterViewModel extends AppViewModel {
   late Timer _timer;
 
   void init() async {
+
+    getStartStatus();
     await getChallenge();
 
     _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
@@ -43,7 +45,7 @@ class RegisterViewModel extends AppViewModel {
     app.currentPlayer = await app.shared.getUser();
     if (app.currentPlayer != null) {
       if (challenge != null) {
-        if (status == 0) {
+        if (status == 0 && status!=null) {
           _timer.cancel();
           nav.pushReplacementNamed(Routes.wait,
               arguments:
@@ -58,6 +60,26 @@ class RegisterViewModel extends AppViewModel {
         }
       } else {
         print("finished");
+        _timer.cancel();
+        showDialog(
+          context: Get.context!,
+          barrierDismissible: false,
+          builder: (context) => WillPopScope(
+                onWillPop: () async {
+                  // Return false to prevent the dialog from being closed
+                  return Future.value(hasStarted);
+                },
+                child: AlertDialog(
+                  title: const Text(
+                      "Contest has conducted",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                      )),
+                  content: Lottie.asset('assets/lotties/bee-lounging.json',
+                      width: 24),
+                ),
+              ));
       }
     }
     setBusy(false);
@@ -95,7 +117,7 @@ class RegisterViewModel extends AppViewModel {
     try {
       currentPlayer = await api.register(name);
       if(currentPlayer != null) {
-        if (status == 0) {
+        if (status == 0 && status!=null) {
           _timer.cancel();
           nav.pushReplacementNamed(Routes.wait,
               arguments:
