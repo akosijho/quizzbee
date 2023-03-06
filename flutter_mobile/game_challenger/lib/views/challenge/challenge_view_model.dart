@@ -26,14 +26,20 @@ class ChallengeViewModel extends AppViewModel {
     notifyListeners();
   }
 
-  void locked(Option o, int choiceIndex) {
+  void locked(Option o, int choiceIndex) async {
     index = choiceIndex;
     print(index);
     if (isLocked == false) {
       if (challenge.answer == choiceChecker(challenge.choice!.indexOf(o))) {
         correct = true;
         isLocked = true;
-
+        try {
+          await api.checkAnswer(
+              choiceChecker(challenge.choice!.indexOf(o)), player.id!);
+        } on DioError catch (e) {
+          connectionResponse(e);
+          rethrow;
+        }
         notifyListeners();
       } else {
         correct = false;

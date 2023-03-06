@@ -21,13 +21,14 @@ class RegisterViewModel extends AppViewModel {
 
   void init() async {
     await getChallenge();
-
+    setBusy(true);
     app.currentPlayer = await app.shared.getUser();
     if (app.currentPlayer != null) {
       await app.nav.pushReplacementNamed(Routes.challenge,
           arguments: ChallengeArguments(
               challenge: challenge!, player: app.currentPlayer!));
     }
+    setBusy(false);
   }
 
   bool isStarted = false;
@@ -89,7 +90,7 @@ class RegisterViewModel extends AppViewModel {
     try {
       temp = await api.getQuestion();
       if (temp != null) {
-       return challenge = temp![0];
+        return challenge = temp![0];
       }
     } on DioError catch (e) {
       connectionResponse(e);

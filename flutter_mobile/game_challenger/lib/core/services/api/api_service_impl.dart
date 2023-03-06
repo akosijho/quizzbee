@@ -79,7 +79,7 @@ class ApiServiceImpl implements ApiService {
   Future<void> checkAnswer(String answer, String id) async {
     final body = {"answer": answer, "id": id};
     try {
-      await dio.post('/question', data: body);
+      await dio.post('/check', data: body);
     } catch (e) {
       rethrow;
     }
