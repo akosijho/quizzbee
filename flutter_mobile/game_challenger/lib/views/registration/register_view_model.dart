@@ -19,6 +19,8 @@ class RegisterViewModel extends AppViewModel {
   final app = locator<AppViewModel>();
   int? playerPoints;
 
+  int? status;
+
   TextEditingController name = TextEditingController();
   final _registrationController = StreamController<void>();
 
@@ -26,23 +28,45 @@ class RegisterViewModel extends AppViewModel {
 
   bool isStarted = false;
 
-  int? hasStarted = 0;
+  bool hasStarted = false;
+
+  late Timer _timer;
 
   void init() async {
     await getChallenge();
+
+    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      getStartStatus();
+      notifyListeners();
+    });
     setBusy(true);
     app.currentPlayer = await app.shared.getUser();
     if (app.currentPlayer != null) {
       if (challenge != null) {
-        await app.nav.pushReplacementNamed(Routes.challenge,
-            arguments: ChallengeArguments(
-                challenge: challenge!, player: app.currentPlayer!));
-        notifyListeners();
+        if (status == 0) {
+          _timer.cancel();
+          nav.pushReplacementNamed(Routes.wait,
+              arguments:
+                  WaitngArguments(player: app.currentPlayer!, q: challenge!));
+        } else {
+          _timer.cancel();
+          nav.pop();
+          await app.nav.pushReplacementNamed(Routes.challenge,
+              arguments: ChallengeArguments(
+                  challenge: challenge!, player: app.currentPlayer!));
+          notifyListeners();
+        }
       } else {
         print("finished");
       }
     }
     setBusy(false);
+  }
+
+  getStartStatus() async {
+    status = await api.start();
+    notifyListeners();
+    print("sat $status");
   }
 
   void addData() {
@@ -70,10 +94,21 @@ class RegisterViewModel extends AppViewModel {
     setBusy(true);
     try {
       currentPlayer = await api.register(name);
-      // await wait();
-      await nav.pushReplacementNamed(Routes.challenge,
-          arguments: ChallengeArguments(
-              challenge: challenge!, player: currentPlayer!));
+      if(currentPlayer != null) {
+        if (status == 0) {
+          _timer.cancel();
+          nav.pushReplacementNamed(Routes.wait,
+              arguments:
+              WaitngArguments(player: currentPlayer!, q: challenge!));
+        } else {
+          _timer.cancel();
+          nav.pop();
+          notifyListeners();
+          await nav.pushReplacementNamed(Routes.challenge,
+              arguments: ChallengeArguments(
+                  challenge: challenge!, player: currentPlayer!));
+        }
+      }
     } on DioError catch (e) {
       connectionResponse(e);
       rethrow;
@@ -81,15 +116,15 @@ class RegisterViewModel extends AppViewModel {
     setBusy(false);
   }
 
-  Future<void> wait() async {
-    if (isStarted == false) {
-      await showDialog(
+  void wait() {
+    if (status == 0) {
+      showDialog(
           context: Get.context!,
           barrierDismissible: false,
           builder: (context) => WillPopScope(
                 onWillPop: () async {
                   // Return false to prevent the dialog from being closed
-                  return Future.value(false);
+                  return Future.value(hasStarted);
                 },
                 child: AlertDialog(
                   title: const Text(
@@ -100,9 +135,11 @@ class RegisterViewModel extends AppViewModel {
                   content: Lottie.asset('assets/lotties/bee-lounging.json',
                       width: 24),
                 ),
-              )).then((value) => null);
+              ));
     } else {
-      await nav.pushReplacementNamed(Routes.challenge);
+      hasStarted = true;
+      app.nav.pop();
+      notifyListeners();
     }
   }
 

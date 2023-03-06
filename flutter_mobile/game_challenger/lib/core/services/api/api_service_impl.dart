@@ -97,6 +97,19 @@ class ApiServiceImpl implements ApiService {
   }
 
   @override
+  Future<int?> start() async {
+    try {
+     final response =  await dio.get('/getresponse',);
+     if(response.statusCode ==  200 && response.data != null){
+       return response.data;
+     }
+    } catch (e) {
+      rethrow;
+    }
+    return null;
+  }
+
+  @override
   Future<String?> nextStream(String id) async {
     final body = {"id": id};
     try {

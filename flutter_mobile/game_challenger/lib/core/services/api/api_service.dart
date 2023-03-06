@@ -14,4 +14,7 @@ abstract class ApiService{
 
   //  answer checking
   Future<void> checkAnswer(String answer, String id);
+
+//  start room
+  Future<int?> start();
 }
