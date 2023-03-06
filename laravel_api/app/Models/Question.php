@@ -32,6 +32,12 @@ class Question extends Model
         return $this->create($data);
     }
 
+    public function getQuestionIds()
+    {
+        return $this->select('id')->orderBy('id', 'asc')->get();
+        
+    }
+
     public function updateQuestion($id, $data)
     {
         $question = $this->find($id);

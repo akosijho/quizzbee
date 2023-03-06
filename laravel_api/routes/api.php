@@ -28,13 +28,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
+
+
 //-----------------------participant---------------------
 //leaderboards-Vue.js
 Route::get('/participant', [ParticipantController::class,'index'])->name('participant.index');
-
-
-
-
 
 //Save Participants-flutter
 //Required Body{'name'}
@@ -42,18 +40,17 @@ Route::post('/participant', [ParticipantController::class,'save'])->name('partic
 // ----------------------------------------------------------
 
 
-
-
 //-----------------------Question---------------------
 //Display Question and choices - flutter
 Route::get('/question', [QuestionController::class,'index'])->name('question.index');
 
-
-
-
+// get question ids
+Route::get('/question_indexes', [QuestionController::class, 'getQuestionIds'])->name('question.ids');
 
 //Answer Checker - flutter
 // Required Body{'answer','id'}
+// answer sa player
+//  id sa player
 Route::post('/check', [QuestionController::class,'check'])->name('question.check');
 // ----------------------------------------------------------
 
@@ -85,11 +82,7 @@ Route::post('/status', [StatusController::class,'status'])->name('status');
 
 //-----------------------Game Master------------------------
 //Next question
-//Required Body{'id'} 
+//Required Body{'id'}
+// id sa question
 Route::post('/next', [GuestController::class,'next'])->name('guest.next');
 // ----------------------------------------------------------
-
-
-
-
-
