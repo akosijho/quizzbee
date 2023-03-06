@@ -82,10 +82,6 @@ Route::post('/next', [GuestController::class,'next'])->name('guest.next');
 
 //Start or Stop - flutter
 Route::post('/status', [StatusController::class,'status'])->name('status');
-
-
-
-Route::post('/waiting_room', [StatusController::class,'waiting_room'])->name('waiting_room');
 // ----------------------------------------------------------
 
 
@@ -96,5 +92,5 @@ Route::post('/waiting_room', [StatusController::class,'waiting_room'])->name('wa
 
 
 
-
+Route::post('/waiting_room', [StatusController::class,'waiting_room'])->name('waiting_room');
 Route::get('/getresponse', [StatusController::class,'getWaitingRoom'])->name('get_waiting_room');
