@@ -26,7 +26,8 @@ class ApiServiceImpl implements ApiService {
     try {
       final response = await dio.post('/participant', data: body);
       if (response.statusCode == 200 && response.data != null) {
-        var player = Player(id: response.data.toString(), name: name);
+        var player = Player(id: response.data['id'].toString(), name: name);
+        print(player);
         shared.setUser(player);
         return player;
       }
@@ -53,7 +54,8 @@ class ApiServiceImpl implements ApiService {
   Future<List<Question>?> getQuestion() async {
     try {
       final response = await dio.get('/question');
-      if (response.statusCode == 200 && response.data != null) {
+      if (response.statusCode == 200 &&
+          response.data != null ) {
         // Challenge result;
         return (response.data as List<dynamic>).map((e) {
           return Question(
@@ -80,6 +82,19 @@ class ApiServiceImpl implements ApiService {
     final body = {"answer": answer, "id": id};
     try {
       await dio.post('/check', data: body);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String?> nextStream(String id) async {
+    final body = {"id": id};
+    try {
+      final response = await dio.post('/next', data: body);
+      if (response.statusCode == 200 && response.data != null) {
+        return response.data.toString();
+      }
     } catch (e) {
       rethrow;
     }

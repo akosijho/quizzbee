@@ -8,7 +8,7 @@ import 'package:game_challenger/core/models/player.dart';
 import 'package:game_challenger/utils/choice_checker.dart';
 import 'package:game_challenger/views/widgets/conection_response.dart';
 
-class ChallengeViewModel extends AppViewModel {
+class NewChallengeViewModel extends AppViewModel {
   bool isLocked = false;
   final Question challenge;
   Question? next;
@@ -20,16 +20,25 @@ class ChallengeViewModel extends AppViewModel {
 
   Map<String, dynamic>? myOptions;
 
-  ChallengeViewModel({required this.challenge, required this.player});
+  NewChallengeViewModel({required this.challenge, required this.player});
 
   Timer? _timer;
 
   void init() async {
     challenge.choice!.shuffle();
     getPoints();
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-      getChallenge();
+    // while(true){
+    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) async {
+      await getChallenge();
+      if (challenge.status != next!.status) {
+        print(next);
+        await nav.pushReplacementNamed(Routes.challenge,
+            arguments: ChallengeArguments(challenge: next!, player: player));
+        notifyListeners();
+      }
+      notifyListeners();
     });
+    // }
     notifyListeners();
   }
 
@@ -60,18 +69,14 @@ class ChallengeViewModel extends AppViewModel {
     }
   }
 
-  void getChallenge() async {
+  Future<void> getChallenge() async {
     // setBusy(true);
     try {
       var temp = await api.getQuestion();
       if (temp != null) {
         next = temp[0];
-        print(next);
-        if (challenge != next) {
-          nav.pushReplacementNamed(Routes.new_challenge,
-              arguments:
-                  NewChallengeArguments(challenge: next!, player: player));
-        }
+        _timer!.cancel();
+        notifyListeners();
       } else {
         print('finished');
       }

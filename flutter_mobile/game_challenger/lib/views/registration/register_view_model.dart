@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:game_challenger/app/app.locator.dart';
@@ -18,20 +20,38 @@ class RegisterViewModel extends AppViewModel {
   int? playerPoints;
 
   TextEditingController name = TextEditingController();
+  final _registrationController = StreamController<void>();
+
+  Stream<void> get stream => _registrationController.stream;
+
+  bool isStarted = false;
+
+  int? hasStarted = 0;
 
   void init() async {
     await getChallenge();
     setBusy(true);
     app.currentPlayer = await app.shared.getUser();
     if (app.currentPlayer != null) {
-      await app.nav.pushReplacementNamed(Routes.challenge,
-          arguments: ChallengeArguments(
-              challenge: challenge!, player: app.currentPlayer!));
+      if (challenge != null) {
+        await app.nav.pushReplacementNamed(Routes.challenge,
+            arguments: ChallengeArguments(
+                challenge: challenge!, player: app.currentPlayer!));
+        notifyListeners();
+      } else {
+        print("finished");
+      }
     }
     setBusy(false);
   }
 
-  bool isStarted = false;
+  void addData() {
+    _registrationController.sink.add(null);
+  }
+
+  Future<void> close() => _registrationController.close();
+
+  Future<void> makeApiCall() async {}
 
   void submit() async {
     final isValid = formKey.currentState!.validate();
@@ -50,7 +70,7 @@ class RegisterViewModel extends AppViewModel {
     setBusy(true);
     try {
       currentPlayer = await api.register(name);
-      // wait();
+      // await wait();
       await nav.pushReplacementNamed(Routes.challenge,
           arguments: ChallengeArguments(
               challenge: challenge!, player: currentPlayer!));
@@ -61,7 +81,7 @@ class RegisterViewModel extends AppViewModel {
     setBusy(false);
   }
 
-  void wait() async {
+  Future<void> wait() async {
     if (isStarted == false) {
       await showDialog(
           context: Get.context!,
@@ -89,7 +109,8 @@ class RegisterViewModel extends AppViewModel {
   Future<Question?> getChallenge() async {
     try {
       temp = await api.getQuestion();
-      if (temp != null) {
+      if (temp != null && temp!.isNotEmpty) {
+        print(temp);
         return challenge = temp![0];
       }
     } on DioError catch (e) {

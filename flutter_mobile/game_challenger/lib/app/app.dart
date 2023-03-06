@@ -6,6 +6,7 @@ import 'package:game_challenger/core/services/navigation/navigation_service_impl
 import 'package:game_challenger/core/services/shared/shared_preference.dart';
 import 'package:game_challenger/core/services/shared/shared_preference_impl.dart';
 import 'package:game_challenger/views/challenge/challenge.dart';
+import 'package:game_challenger/views/new_challenge/challenge.dart';
 import 'package:game_challenger/views/registration/register.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -15,6 +16,11 @@ import 'package:stacked/stacked_annotations.dart';
       page: Challenge,
       name: "challenge",
       transitionsBuilder: TransitionsBuilders.zoomIn,),
+
+  CustomRoute(
+    page: NewChallenge,
+    name: "new_challenge",
+    transitionsBuilder: TransitionsBuilders.zoomIn,),
   CustomRoute(
       page: Register,
       name: "register",
