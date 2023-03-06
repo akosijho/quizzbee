@@ -15,6 +15,11 @@ use App\Http\Controllers\admin\QuestionController;
 */
 
 
-
+// question
 Route::get('/question', [QuestionController::class,'index'])->name('question.index');
 Route::post('/question', [QuestionController::class,'save'])->name('question.save');
+
+
+
+// dashboard
+Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard.index');

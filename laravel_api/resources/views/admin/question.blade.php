@@ -15,7 +15,7 @@
     <div class="text" style="margin-top: 1rem; ">
     	<label for="answer" class="form-label">Answer</label>
     	<select class="form-select" aria-label="Default select example" id="answer" name="answer">
-		  <option selected>Open this select menu</option>
+		  <option selected>Choose Answer</option>
 		  <option value="a">a</option>
 		  <option value="b">b</option>
 		  <option value="c">c</option>
@@ -50,6 +50,7 @@
 </div>
 
 <script>
+
 	function addTextBox()
 	{
 		var text = document.getElementsByClassName('text')[0];
@@ -62,7 +63,11 @@
 		var textboxes = document.querySelectorAll(".form-control");
 		for (var i = 0; i < textboxes.length; i++) {
 		  textboxes[i].setAttribute("name", "choices[]");
+		  textboxes[i].style.textTransform = "uppercase";
 		}
+
 	}
+
+
 </script>
 @endsection

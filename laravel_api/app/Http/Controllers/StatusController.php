@@ -19,10 +19,34 @@ class StatusController extends Controller
         if ($data['status'] == 0)
         {
             DB::table('statuses')->update(['status' => 1]);
+            return response()->json("true");
         }
         else
         {
             DB::table('statuses')->update(['status' => 0]);
+            return response()->json("false");
         }
+    }
+
+
+    public function waiting_room()
+    {
+        $data = $this->status->getWaitingRoom();
+        if ($data['waiting_room'] == 0)
+        {
+            DB::table('statuses')->update(['waiting_room' => 1]);
+            return response()->json("true");
+        }
+        else
+        {
+            DB::table('statuses')->update(['waiting_room' => 0]);
+            return response()->json("false");
+        }
+    }
+
+    public function getWaitingRoom()
+    {
+        $data = $this->status->getWaitingRoom();
+        return response()->json($data['waiting_room']);
     }
 }
