@@ -64,6 +64,6 @@ class ParticipantController extends Controller
     public function points($id)
     {
         $data = $this->participant->pointsParticipant($id);
-        return response()->json($data);
+        return response($data);
     }
 }

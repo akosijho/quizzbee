@@ -22,6 +22,13 @@ class QuestionController extends Controller
         return response()->json($data);
     }
 
+    public function getQuestionIds()
+    {
+        $data = $this->question->getQuestionIds();
+
+        return response()->json($data);
+    }
+
     public function check(Request $request)
     {
         $data = $this->question->checkQuestion($request->answer);
