@@ -17,4 +17,8 @@ abstract class ApiService{
 
 //  start room
   Future<int?> start();
+
+  Future<int?> finish();
+
+  Future<List<Player>?> getTops();
 }

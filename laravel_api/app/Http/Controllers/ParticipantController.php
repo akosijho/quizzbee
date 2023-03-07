@@ -21,8 +21,12 @@ class ParticipantController extends Controller
         return response()->json($data);
     }
 
-
-
+    public function top()
+    {
+        $data = $this->participant->getTopParticipants();
+        return response()->json($data);
+    }
+    
 
     public function save(Request $request)
     {

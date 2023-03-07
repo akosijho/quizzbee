@@ -15,20 +15,21 @@ class NewChallengeViewModel extends AppViewModel {
   final Player player;
   int? index;
   int playerPoints = 0;
-
+  int? finish;
   bool correct = false;
 
   Map<String, dynamic>? myOptions;
 
   NewChallengeViewModel({required this.challenge, required this.player});
 
-  Timer? _timer;
+  Timer? timer;
 
   void init() async {
     // challenge.choice!.shuffle();
     getPoints();
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
       getChallenge();
+      getFinish();
     });
     notifyListeners();
   }
@@ -39,18 +40,9 @@ class NewChallengeViewModel extends AppViewModel {
       if (challenge.answer == choiceChecker(challenge.choice!.indexOf(o))) {
         correct = true;
         isLocked = true;
-        try {
-          await api.checkAnswer(
-              choiceChecker(challenge.choice!.indexOf(o)), player.id!);
-          playerPoints = (await api.playerPoints(player.id!)) ?? 0;
-          notifyListeners();
-        } on DioError catch (e) {
-          connectionResponse(e);
-          rethrow;
-        }
         notifyListeners();
+        pointUpload(o);
       } else {
-        correct = false;
         isLocked = true;
         notifyListeners();
         return;
@@ -58,6 +50,22 @@ class NewChallengeViewModel extends AppViewModel {
     } else {
       return;
     }
+  }
+
+  void pointUpload(Option o) async {
+    try {
+      api
+          .checkAnswer(choiceChecker(challenge.choice!.indexOf(o)),
+              player.id!.toString())
+          .then((value) async {
+        playerPoints = (await api.playerPoints(player.id!.toString())) ?? 0;
+        notifyListeners();
+      });
+    } on DioError catch (e) {
+      connectionResponse(e);
+      rethrow;
+    }
+    notifyListeners();
   }
 
   Future<void> getChallenge() async {
@@ -68,11 +76,9 @@ class NewChallengeViewModel extends AppViewModel {
         next = temp[0];
         print(next);
         if (challenge != next!) {
-
-          _timer!.cancel();
+          timer!.cancel();
           nav.pushReplacementNamed(Routes.challenge,
-              arguments:
-              ChallengeArguments(challenge: next!, player: player));
+              arguments: ChallengeArguments(challenge: next!, player: player));
 
           notifyListeners();
         }
@@ -86,9 +92,30 @@ class NewChallengeViewModel extends AppViewModel {
     }
   }
 
+  void getFinish() async {
+    try {
+      final temp = await api.finish();
+      if (temp != null) {
+        finish = temp;
+        if (finish == 1) {
+          timer!.cancel();
+          nav.pushReplacementNamed(Routes.finish,
+              arguments: FinishArguments(player: player));
+
+          notifyListeners();
+        }
+        notifyListeners();
+      }
+    } on DioError catch (e) {
+      connectionResponse(e);
+      rethrow;
+    }
+    notifyListeners();
+  }
+
   void getPoints() async {
     try {
-      playerPoints = (await api.playerPoints(player.id!)) ?? 0;
+      playerPoints = (await api.playerPoints(player.id!.toString())) ?? 0;
     } on DioError catch (e) {
       connectionResponse(e);
       rethrow;
