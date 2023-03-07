@@ -67,7 +67,7 @@ class NewChallengeViewModel extends AppViewModel {
       if (temp != null && temp.isNotEmpty) {
         next = temp[0];
         print(next);
-        if (challenge != next) {
+        if (challenge.status != next!.status) {
 
           _timer!.cancel();
           nav.pushReplacementNamed(Routes.challenge,
