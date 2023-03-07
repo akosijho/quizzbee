@@ -38,6 +38,8 @@ class Next extends StatelessWidget {
                     children: [
                       ChoiceBuilder(
                         choice: i,
+                        answer: q.answer!,
+                        q: q,
                       ),
                       const SizedBox(
                         height: 4,
