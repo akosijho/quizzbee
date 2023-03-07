@@ -19,7 +19,8 @@ class QuestionController extends Controller
 
     public function index()
     {
-        return view('admin.question');
+        $question = 'question';
+        return view('admin.question', compact('question'));
     }
 
 

@@ -71,3 +71,7 @@
 
 </script>
 @endsection
+
+@section('question')
+active
+@endsection

@@ -69,3 +69,9 @@
                     </div>
                 </div>
 @endsection
+
+@section('dashboard')
+    @if($dashboard)
+    active
+    @endif
+@endsection
