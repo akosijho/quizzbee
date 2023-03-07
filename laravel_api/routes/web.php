@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\QuestionController;
-
+use App\Http\Controllers\admin\SettingsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,3 +23,8 @@ Route::post('/question', [QuestionController::class,'save'])->name('question.sav
 
 // dashboard
 Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard.index');
+
+
+// setings
+Route::get('/settings', [SettingsController::class,'index'])->name('settings.index');
+Route::post('/settings', [SettingsController::class,'reset'])->name('settings.reset');
