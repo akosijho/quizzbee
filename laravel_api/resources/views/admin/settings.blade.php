@@ -9,3 +9,7 @@
 		</form>
 </div>
 @endsection
+
+@section('settings')
+active
+@endsection
