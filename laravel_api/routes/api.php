@@ -34,6 +34,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //leaderboards-Vue.js
 Route::get('/participant', [ParticipantController::class,'index'])->name('participant.index');
 
+
+Route::get('/top', [ParticipantController::class,'top'])->name('participant.top ');
+
 //Save Participants-flutter
 //Required Body{'name'}
 Route::post('/participant', [ParticipantController::class,'save'])->name('participant.save');
@@ -90,4 +93,8 @@ Route::post('/next', [GuestController::class,'next'])->name('guest.next');
 
 Route::post('/waiting_room', [StatusController::class,'waiting_room'])->name('waiting_room');
 Route::get('/getresponse', [StatusController::class,'getWaitingRoom'])->name('get_waiting_room');
+
+
+Route::post('/finish', [StatusController::class,'finish'])->name('finish.finish');
+Route::get('/finish', [StatusController::class,'getFinish'])->name('finish.get');
 

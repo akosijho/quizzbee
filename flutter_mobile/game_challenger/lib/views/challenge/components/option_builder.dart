@@ -27,7 +27,12 @@ class OptionBuilder extends ViewModelWidget<ChallengeViewModel> {
               maxWidth: double.infinity),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-              color: Colors.white,
+              color:
+                  viewModel.index == viewModel.challenge.choice!.indexOf(choice)
+                      ? viewModel.correct
+                          ? const Color(0xff31cb00).withOpacity(0.9)
+                          : Colors.red
+                      : Colors.white,
               border: Border.all(width: 1.5, color: MyColors.black),
               borderRadius: BorderRadius.circular(16)),
           child: Row(
@@ -47,20 +52,20 @@ class OptionBuilder extends ViewModelWidget<ChallengeViewModel> {
               ),
               viewModel.index == viewModel.challenge.choice!.indexOf(choice)
                   ? viewModel.correct
-                      ? Icon(
+                      ? const Icon(
                           Icons.check_circle,
                           size: 24,
-                          color: const Color(0xff31cb00).withOpacity(0.9),
+                          color: Colors.white,
                         )
                       : Container(
                           width: 24,
                           alignment: Alignment.center,
                           decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.red),
+                              shape: BoxShape.circle, color: Colors.white),
                           child: const Icon(
                             Icons.close_rounded,
                             size: 16,
-                            color: Colors.white,
+                            color: Colors.red,
                           ),
                         )
                   : const SizedBox.shrink()

@@ -15,6 +15,11 @@ class Participant extends Model
         return $this->orderBy('score','desc')->get();
     }
 
+    public function getTopParticipants()
+    {
+        return $this->orderBy('score','desc')->limit(10)->get();
+    }
+
     public function saveParticipant($data)
     {
         return $this->insertGetId($data);

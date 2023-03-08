@@ -39,7 +39,7 @@ class NextOne extends StatelessWidget {
                         for (var i in q.choice!)
                           Column(
                             children: [
-                              ChoiceBuilder(choice: i,),
+                              ChoiceBuilder(choice: i,q: q, answer: q.answer!,),
                               const SizedBox(
                                 height: 4,
                               )

@@ -11,23 +11,22 @@ import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: ApiService)
 class ApiServiceImpl implements ApiService {
-  static BaseOptions options = BaseOptions(
-      baseUrl: BASE_URL,
-      connectTimeout: const Duration(seconds: 30),
-      persistentConnection: true);
+  static BaseOptions options =
+      BaseOptions(baseUrl: BASE_URL, persistentConnection: true);
   final shared = locator<SharedPreference>();
 
   Dio dio = Dio(options)
     ..options.headers.addEntries([
       const MapEntry('accept', 'application/json'),
     ])
-  ..interceptors.add(RetryInterceptor(
-    dio: Dio(options),
-    maxRetries: 3,
-    retryOnException: (e) => e is SocketException || e is HttpException || e is DioError && e.response?.statusCode == 429,
-  ));
-
-
+    ..interceptors.add(RetryInterceptor(
+      dio: Dio(options),
+      maxRetries: 3,
+      retryOnException: (e) =>
+          e is SocketException ||
+          e is HttpException ||
+          e is DioError && e.response?.statusCode == 429,
+    ));
 
   @override
   Future<Player?> register(String name) async {
@@ -35,7 +34,7 @@ class ApiServiceImpl implements ApiService {
     try {
       final response = await dio.post('/participant', data: body);
       if (response.statusCode == 200 && response.data != null) {
-        var player = Player(id: response.data['id'].toString(), name: name);
+        var player = Player(id: response.data['id'], name: name);
         print(player);
         shared.setUser(player);
         return player;
@@ -49,7 +48,7 @@ class ApiServiceImpl implements ApiService {
   @override
   Future<int?> playerPoints(String id) async {
     try {
-      final response = await dio.get('/participant/$id');
+      final response = await retryOn429(() => dio.get('/participant/$id'));
       if (response.statusCode == 200 && response.data != null) {
         return (response.data as Map<String, dynamic>)['score'];
       }
@@ -62,9 +61,8 @@ class ApiServiceImpl implements ApiService {
   @override
   Future<List<Question>?> getQuestion() async {
     try {
-      final response = await dio.get('/question');
-      if (response.statusCode == 200 &&
-          response.data != null ) {
+      final response = await retryOn429(() => dio.get('/question'));
+      if (response.statusCode == 200 && response.data != null) {
         // Challenge result;
         return (response.data as List<dynamic>).map((e) {
           return Question(
@@ -99,10 +97,12 @@ class ApiServiceImpl implements ApiService {
   @override
   Future<int?> start() async {
     try {
-     final response =  await dio.get('/getresponse',);
-     if(response.statusCode ==  200 && response.data != null){
-       return response.data;
-     }
+      final response = await retryOn429(() => dio.get(
+            '/getresponse',
+          ));
+      if (response.statusCode == 200 && response.data != null) {
+        return response.data;
+      }
     } catch (e) {
       rethrow;
     }
@@ -110,16 +110,56 @@ class ApiServiceImpl implements ApiService {
   }
 
   @override
-  Future<String?> nextStream(String id) async {
-    final body = {"id": id};
+  Future<int?> finish() async {
     try {
-      final response = await dio.post('/next', data: body);
+      final response = await retryOn429(() => dio.get(
+            '/finish',
+          ));
       if (response.statusCode == 200 && response.data != null) {
-        return response.data.toString();
+        return response.data;
       }
     } catch (e) {
       rethrow;
     }
+    return null;
+  }
+
+  @override
+  Future<List<Player>?> getTops() async {
+    try {
+      final response = await retryOn429(() => dio.get('/top'));
+      if (response.statusCode == 200 && response.data != null) {
+        return (response.data as List<dynamic>)
+            .map((e) => Player.fromJson(e))
+            .toList();
+      }
+    } catch (e) {
+      rethrow;
+    }
+    return null;
+  }
+
+  Future<Response<T>> retryOn429<T>(
+      Future<Response<T>> Function() request) async {
+    Response<T>? response;
+    for (var i = 0; i < 3; i++) {
+      try {
+        response = await request();
+        if (response.statusCode != 429) {
+          return response;
+        }
+        // Delay the next request by the time specified in the "Retry-After" header
+        final retryAfter = response.headers.value('Retry-After');
+        await Future.delayed(Duration(seconds: int.parse(retryAfter!)));
+      } catch (e) {
+        rethrow;
+      }
+    }
+    throw DioError(
+      requestOptions: response!.requestOptions,
+      response: response,
+      error: 'Too many retries',
+    );
   }
 }
 
@@ -128,7 +168,8 @@ class RetryInterceptor extends Interceptor {
   final int maxRetries;
   final bool Function(dynamic error) retryOnException;
 
-  RetryInterceptor({required this.dio, this.maxRetries = 3, required this.retryOnException});
+  RetryInterceptor(
+      {required this.dio, this.maxRetries = 3, required this.retryOnException});
 
   @override
   Future onError(DioError err, ErrorInterceptorHandler handler) async {
@@ -137,7 +178,7 @@ class RetryInterceptor extends Interceptor {
       while (retries < maxRetries) {
         try {
           // Calculate a delay using exponential backoff
-          final delay = Duration(seconds: (1 ^ retries) * 1);
+          final delay = Duration(milliseconds: (1 ^ retries) * 1);
 
           // Wait before retrying the request
           await Future.delayed(delay);

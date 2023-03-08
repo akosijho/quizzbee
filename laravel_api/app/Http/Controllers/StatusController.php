@@ -44,9 +44,30 @@ class StatusController extends Controller
         }
     }
 
+    public function finish()
+    {
+        $data = $this->status->getFinish();
+        if ($data['waiting_room'] == 0)
+        {
+            DB::table('statuses')->update(['finish' => 1]);
+            return response()->json("true");
+        }
+        else
+        {
+            DB::table('statuses')->update(['finish' => 0]);
+            return response()->json("false");
+        }
+    }
+
     public function getWaitingRoom()
     {
         $data = $this->status->getWaitingRoom();
         return response()->json($data['waiting_room']);
+    }
+
+    public function getFinish()
+    {
+        $data = $this->status->getFinish();
+        return response()->json($data['finish']);
     }
 }
