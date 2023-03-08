@@ -28,7 +28,7 @@ class ChallengeViewModel extends AppViewModel {
   void init() async {
     // challenge.choice!.shuffle();
     getPoints();
-    timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    timer = Timer.periodic(Duration(milliseconds: 2000), (timer) {
       getChallenge();
       getFinish();
     });

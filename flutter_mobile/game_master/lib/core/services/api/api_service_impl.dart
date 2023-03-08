@@ -33,7 +33,7 @@ class ApiServiceImpl implements ApiService {
   Future<Player?> register(String name) async {
     final body = {'name': name};
     try {
-      final response = await dio.post('/participant', data: body);
+      final response = await retryOn429(() => dio.post('/participant', data: body));
       if (response.statusCode == 200 && response.data != null) {
         var player = Player(id: response.data['id'].toString(), name: name);
         print(player);
@@ -49,7 +49,7 @@ class ApiServiceImpl implements ApiService {
   @override
   Future<int?> playerPoints(String id) async {
     try {
-      final response = await dio.get('/participant/$id');
+      final response = await retryOn429(() => dio.get('/participant/$id'));
       if (response.statusCode == 200 && response.data != null) {
         return (response.data as Map<String, dynamic>)['score'];
       }
@@ -62,7 +62,7 @@ class ApiServiceImpl implements ApiService {
   @override
   Future<List<Question>?> getQuestion() async {
     try {
-      final response = await dio.get('/question');
+      final response = await retryOn429(() => dio.get('/question'));
       if (response.statusCode == 200 &&
           response.data != null ) {
         // Challenge result;
@@ -90,7 +90,7 @@ class ApiServiceImpl implements ApiService {
   Future<void> next(String id) async{
     final body = {'id': id};
     try{
-      await dio.post("/next", data: body);
+      await retryOn429(() => dio.post("/next", data: body));
     }catch(e){
       await next(id);
       rethrow;
@@ -102,7 +102,7 @@ class ApiServiceImpl implements ApiService {
   Future<void> checkAnswer(String answer, String id) async {
     final body = {"answer": answer, "id": id};
     try {
-      await dio.post('/check', data: body);
+      await  retryOn429(() => dio.post('/check', data: body));
     } catch (e) {
       rethrow;
     }
@@ -111,7 +111,7 @@ class ApiServiceImpl implements ApiService {
   @override
   Future<int?> start() async {
     try {
-     final response =  await dio.get('/getresponse',);
+     final response =  await retryOn429(() => dio.get('/getresponse',));
      if(response.statusCode ==  200 && response.data != null){
        return response.data;
      }
@@ -122,15 +122,60 @@ class ApiServiceImpl implements ApiService {
   }
 
   @override
+  Future<void> finish() async {
+    try {
+      await retryOn429(() => dio.post('/finish',));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<int?> getFinish() async {
+    try {
+      final response =  await retryOn429(() => dio.get('/finish',));
+      if(response.statusCode ==  200 && response.data != null){
+        return response.data;
+      }
+    } catch (e) {
+      rethrow;
+    }
+    return null;
+  }
+
+  @override
   Future<bool?> waiting() async {
     try {
-      final response = await dio.post('/waiting_room');
+      final response = await retryOn429(() => dio.post('/waiting_room'));
       if(response.statusCode == 200 && response.data != null){
         return true;
       }
     } catch (e) {
       rethrow;
     }return null;
+  }
+
+  Future<Response<T>> retryOn429<T>(
+      Future<Response<T>> Function() request) async {
+    Response<T>? response;
+    for (var i = 0; i < 3; i++) {
+      try {
+        response = await request();
+        if (response.statusCode != 429) {
+          return response;
+        }
+        // Delay the next request by the time specified in the "Retry-After" header
+        final retryAfter = response.headers.value('Retry-After');
+        await Future.delayed(Duration(seconds: int.parse(retryAfter!)));
+      } catch (e) {
+        rethrow;
+      }
+    }
+    throw DioError(
+      requestOptions: response!.requestOptions,
+      response: response,
+      error: 'Too many retries',
+    );
   }
 }
 

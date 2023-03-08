@@ -23,4 +23,9 @@ abstract class ApiService{
 
   //waiting_roomn
   Future<bool?> waiting();
+
+  Future<void> finish();
+
+
+  Future<int?> getFinish();
 }

@@ -12,7 +12,7 @@ class Start extends StatelessWidget {
     return ViewModelBuilder<StartViewModel>.reactive(
         viewModelBuilder: () => StartViewModel(),
         onViewModelReady: (model) => model.init(),
-        builder: (context, model, chil) {
+        builder: (context, model, child) {
           return SafeArea(
               child: Scaffold(
             body: BuildBody(

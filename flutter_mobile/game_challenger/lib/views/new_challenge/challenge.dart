@@ -43,10 +43,10 @@ class NewChallenge extends StatelessWidget {
                 body: BuildBody(
                   child: Column(
                     children: [
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text("Place: 1"),
-                      ),
+                      // const Align(
+                      //   alignment: Alignment.topLeft,
+                      //   child: Text("Place: 1"),
+                      // ),
                       Expanded(
                         child: Align(
                           alignment: Alignment.center,
