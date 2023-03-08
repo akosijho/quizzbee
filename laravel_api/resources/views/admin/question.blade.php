@@ -5,7 +5,7 @@
 	@csrf
   <div class="mb-3" style="display: flex; justify-content:center; align-items: flex-start; flex-direction: column;">
     <label for="question" class="form-label">Question</label>
-    <textarea name="message" class="form-label" style="width: 100%; border: 1px solid grey;"></textarea>
+    <textarea name="message" class="form-label" style="width: 100%; border: 1px solid #d1d3e2;"></textarea>
   </div>
   <div class="mb-3">
     <label for="choices" class="form-label">Choices</label>
