@@ -23,7 +23,7 @@ class WaitingViewModel extends AppViewModel{
     });
   }
 
-  getStartStatus() async {
+getStartStatus() async {
     status = await api.start();
     if(status == 1){
       _timer!.cancel();

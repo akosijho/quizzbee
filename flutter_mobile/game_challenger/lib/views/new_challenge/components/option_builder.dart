@@ -12,7 +12,7 @@ class OptionBuilder extends ViewModelWidget<NewChallengeViewModel> {
   @override
   Widget build(BuildContext context, NewChallengeViewModel viewModel) {
     return GestureDetector(
-        onTap: () async {
+        onTap:viewModel.isLocked ? null :  () async {
           // await viewModel.nav.pushReplacementNamed(Routes.register);
           viewModel.locked(choice, viewModel.challenge.choice!.indexOf(choice));
         },

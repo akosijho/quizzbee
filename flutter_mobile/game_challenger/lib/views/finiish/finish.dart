@@ -32,14 +32,14 @@ class Finish extends StatelessWidget {
                       ),
                     ),
                     body: BuildBody(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text('Top placers'),
-                            const HGap16(),
-                            SingleChildScrollView(
-                              child: Column(
+                      child: SingleChildScrollView(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Top placers'),
+                              const HGap16(),
+                              Column(
                                 children: [
                                   for (var i in model.tops)
                                     Column(
@@ -54,21 +54,16 @@ class Finish extends StatelessWidget {
                                                   BorderRadius.circular(12)),
                                           width: 320,
                                           child: ListTile(
-                                            leading: Text(
-                                              (model.tops.indexOf(i) + 1).toString() ,
-                                              style: const TextStyle(
+                                            title: Padding(
+                                              padding: const EdgeInsets.only(left:32.0),
+                                              child: Text(
+                                                i.name ?? '',
+                                                style: const TextStyle(
                                                   fontWeight: FontWeight.w700,
-                                                  fontSize: 14,
-                                                  color: Colors.black),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            title: Text(
-                                              i.name ?? '',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 16,
+                                                  fontSize: 16,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                              overflow: TextOverflow.ellipsis,
                                             ),
                                             trailing: Text(
                                               i.score!.toString(),
@@ -83,9 +78,9 @@ class Finish extends StatelessWidget {
                                       ],
                                     )
                                 ],
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ))),

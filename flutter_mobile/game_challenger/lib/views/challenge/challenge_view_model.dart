@@ -28,7 +28,7 @@ class ChallengeViewModel extends AppViewModel {
   void init() async {
     // challenge.choice!.shuffle();
     getPoints();
-    timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    timer = Timer.periodic(Duration(milliseconds: 2000), (timer) {
       getChallenge();
       getFinish();
     });
@@ -38,6 +38,8 @@ class ChallengeViewModel extends AppViewModel {
   void locked(Option o, int choiceIndex) async {
     index = choiceIndex;
     if (isLocked == false) {
+      isLocked = true;
+      notifyListeners();
       if (challenge.answer == choiceChecker(challenge.choice!.indexOf(o))) {
         correct = true;
         isLocked = true;
@@ -45,8 +47,6 @@ class ChallengeViewModel extends AppViewModel {
         // final result = await compute(pointUpload, "John");
         pointUpload(o);
       } else {
-        isLocked = true;
-        notifyListeners();
         return;
       }
     } else {

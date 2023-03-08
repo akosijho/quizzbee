@@ -15,6 +15,7 @@ class StartViewModel extends AppViewModel {
   void toNext() async {
     await getChallenge();
     proceed = await api.waiting();
+    print("to: $proceed");
     if (proceed != null && proceed == true) {
       if (challenge != null) {
         nav.pushReplacementNamed(Routes.next,
