@@ -18,7 +18,10 @@ class ParticipantController extends Controller
     public function index()
     {
         $data = $this->participant->getParticipants();
+        return $this->orderBy('score','desc')->get();
         return response()->json($data);
+
+      
     }
 
     public function top()
