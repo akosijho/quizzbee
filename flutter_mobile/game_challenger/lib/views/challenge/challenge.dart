@@ -21,7 +21,7 @@ class Challenge extends StatelessWidget {
         viewModelBuilder: () =>
             ChallengeViewModel(challenge: challenge, player: player),
         onViewModelReady: (model) => model.init(),
-        onDispose: (model) => model.timer!.cancel(),
+        // onDispose: (model) => model.timer!.cancel(),
         builder: (context, model, child) {
           return SafeArea(
             bottom: true,

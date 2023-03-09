@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +9,7 @@ import 'package:game_challenger/core/models/challenge.dart';
 import 'package:game_challenger/core/models/player.dart';
 import 'package:game_challenger/utils/choice_checker.dart';
 import 'package:game_challenger/views/widgets/conection_response.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class ChallengeViewModel extends AppViewModel {
   bool isLocked = false;
@@ -26,13 +28,41 @@ class ChallengeViewModel extends AppViewModel {
   Timer? timer;
 
   void init() async {
-    // challenge.choice!.shuffle();
+    pusher.init(read);
+    getChallenge();
     getPoints();
-    timer = Timer.periodic(Duration(milliseconds: 2000), (timer) {
-      getChallenge();
-      getFinish();
-    });
+    // timer = Timer.periodic(Duration(milliseconds: 2000), (timer) {
+    //   getChallenge();
+    //   getFinish();
+    // });
     notifyListeners();
+  }
+
+  Future<void> read(PusherEvent event) async {
+    String s = event.data.toString();
+    if (s != "{}") {
+      var n = s.substring(1, s.length - 1);
+      var n1 = n.substring(1, n.length - 1);
+      String unescapedString =
+          n1.replaceAll('\\\"', '"').replaceAll('\\\\', '');
+      var j = jsonDecode(unescapedString);
+      next = Question(
+          id: j['id'],
+          question: j['question'],
+          status: j['status'],
+          answer: j['answer'],
+          choice: (j['choice'] as List<dynamic>)
+              .map((e) => Option.fromJson(e as Map<String, dynamic>))
+              .toList());
+      print('j $next');
+      if (challenge != next) {
+        // timer!.cancel();
+        nav.pushReplacementNamed(Routes.new_challenge,
+            arguments: NewChallengeArguments(challenge: next!, player: player));
+
+        notifyListeners();
+      }
+    }
   }
 
   void locked(Option o, int choiceIndex) async {

@@ -14,11 +14,7 @@ class Register extends StatelessWidget {
         onViewModelReady: (model) => model.init(),
         builder: (context, model, child) => Scaffold(
               body: BuildBody(
-                child: model.isBusy
-                    ? Center(
-                        child: Lottie.asset('assets/lotties/bee-lounging.json'),
-                      )
-                    : Container(
+                child: Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
                         alignment: Alignment.center,
