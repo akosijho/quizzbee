@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         // app.pusher.init((p0) => {});
       },
       onDispose: (){
-        // app.pusher.pusher.disconnect();
+        app.pusher.pusher.disconnect();
       },
     );
   }

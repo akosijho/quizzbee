@@ -38,6 +38,7 @@ class RegisterViewModel extends AppViewModel {
       PusherEvent(channelName: 'my-channel', eventName: 'my-event');
 
   Future<void> read(PusherEvent event) async {
+    print("event ${event.data}");
     String s = event.data.toString();
     if (s != "{}") {
       var n = s.substring(1, s.length - 1);
@@ -96,7 +97,9 @@ class RegisterViewModel extends AppViewModel {
   }
 
   void init() async {
+    setBusy(true);
     app.currentPlayer = await app.shared.getUser();
+    setBusy(false);
     getStartStatus();
     pusher.init(read);
     await getChallenge();

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_challenger/views/registration/register_view_model.dart';
 import 'package:game_challenger/views/widgets/build_body.dart';
-import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class Register extends StatelessWidget {
@@ -56,7 +55,7 @@ class Register extends StatelessWidget {
                                     color: const Color(0xff31cb00),
                                     borderRadius: BorderRadius.circular(10)),
                                 child: TextButton(
-                                    onPressed: () {
+                                    onPressed: model.isBusy ? null : () {
                                       model.register(model.name.value.text);
                                     },
                                     child: Center(

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:game_challenger/app/app.router.dart';
 import 'package:game_challenger/app/app_view_model.dart';
 import 'package:game_challenger/core/models/challenge.dart';
@@ -39,7 +38,14 @@ class ChallengeViewModel extends AppViewModel {
   }
 
   Future<void> read(PusherEvent event) async {
+    print("event ${event.data}");
     String s = event.data.toString();
+    if(s == "{\"finish\":1}"){
+      finish = 1;
+    }
+
+    finish = s == "{\"finish\":1}" ? 1 : 0;
+
     if (s != "{}") {
       var n = s.substring(1, s.length - 1);
       var n1 = n.substring(1, n.length - 1);
@@ -127,15 +133,15 @@ class ChallengeViewModel extends AppViewModel {
       var temp = await api.getQuestion();
       if (temp != null && temp.isNotEmpty) {
         next = temp[0];
-        print(next);
-        if (challenge != next) {
-          timer!.cancel();
-          nav.pushReplacementNamed(Routes.new_challenge,
-              arguments:
-                  NewChallengeArguments(challenge: next!, player: player));
-
-          notifyListeners();
-        }
+        // print(next);
+        // if (challenge != next) {
+        //   timer!.cancel();
+        //   nav.pushReplacementNamed(Routes.new_challenge,
+        //       arguments:
+        //           NewChallengeArguments(challenge: next!, player: player));
+        //
+        //   notifyListeners();
+        // }
       } else {
         // _timer!.cancel();cancel
         print('finished');
