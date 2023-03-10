@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_challenger/views/registration/register_view_model.dart';
 import 'package:game_challenger/views/widgets/build_body.dart';
-import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class Register extends StatelessWidget {
@@ -14,11 +13,7 @@ class Register extends StatelessWidget {
         onViewModelReady: (model) => model.init(),
         builder: (context, model, child) => Scaffold(
               body: BuildBody(
-                child: model.isBusy
-                    ? Center(
-                        child: Lottie.asset('assets/lotties/bee-lounging.json'),
-                      )
-                    : Container(
+                child: Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
                         alignment: Alignment.center,
@@ -60,7 +55,7 @@ class Register extends StatelessWidget {
                                     color: const Color(0xff31cb00),
                                     borderRadius: BorderRadius.circular(10)),
                                 child: TextButton(
-                                    onPressed: () {
+                                    onPressed: model.isBusy ? null : () {
                                       model.register(model.name.value.text);
                                     },
                                     child: Center(

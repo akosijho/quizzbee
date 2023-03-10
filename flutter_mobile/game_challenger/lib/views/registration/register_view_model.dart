@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:game_challenger/core/models/challenge.dart';
 import 'package:game_challenger/views/widgets/conection_response.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class RegisterViewModel extends AppViewModel {
   var formKey = GlobalKey<FormState>();
@@ -32,57 +34,80 @@ class RegisterViewModel extends AppViewModel {
 
   late Timer _timer;
 
-  void init() async {
+  PusherEvent event =
+      PusherEvent(channelName: 'my-channel', eventName: 'my-event');
 
-    getStartStatus();
-    await getChallenge();
-
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-      getStartStatus();
-      notifyListeners();
-    });
-    setBusy(true);
-    app.currentPlayer = await app.shared.getUser();
-    if (app.currentPlayer != null) {
-      if (challenge != null) {
-        if (status == 0 && status!=null) {
-          _timer.cancel();
-          nav.pushReplacementNamed(Routes.wait,
-              arguments:
-                  WaitngArguments(player: app.currentPlayer!, q: challenge!));
+  Future<void> read(PusherEvent event) async {
+    print("event ${event.data}");
+    String s = event.data.toString();
+    if (s != "{}") {
+      var n = s.substring(1, s.length - 1);
+      var n1 = n.substring(1, n.length - 1);
+      String unescapedString =
+          n1.replaceAll('\\\"', '"').replaceAll('\\\\', '');
+      var j = jsonDecode(unescapedString);
+      challenge = Question(
+          id: j['id'],
+          question: j['question'],
+          status: j['status'],
+          answer: j['answer'],
+          choice: (j['choice'] as List<dynamic>)
+              .map((e) => Option.fromJson(e as Map<String, dynamic>))
+              .toList());
+      print('j $challenge');
+      if (app.currentPlayer != null) {
+        if (challenge != null) {
+          if (status == 0 && status != null) {
+            // _timer.cancel();
+            nav.pushReplacementNamed(Routes.wait,
+                arguments:
+                    WaitngArguments(player: app.currentPlayer!, q: challenge!));
+          } else {
+            // _timer.cancel();
+            nav.pop();
+            await app.nav.pushReplacementNamed(Routes.challenge,
+                arguments: ChallengeArguments(
+                    challenge: challenge!, player: app.currentPlayer!));
+            notifyListeners();
+          }
         } else {
+          print("finished");
           _timer.cancel();
-          nav.pop();
-          await app.nav.pushReplacementNamed(Routes.challenge,
-              arguments: ChallengeArguments(
-                  challenge: challenge!, player: app.currentPlayer!));
-          notifyListeners();
+          showDialog(
+              context: Get.context!,
+              barrierDismissible: false,
+              builder: (context) => WillPopScope(
+                    onWillPop: () async {
+                      // Return false to prevent the dialog from being closed
+                      return Future.value(hasStarted);
+                    },
+                    child: AlertDialog(
+                      title: const Text("Contest has conducted",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12,
+                          )),
+                      content: Lottie.asset('assets/lotties/bee-lounging.json',
+                          width: 24),
+                    ),
+                  ));
         }
-      } else {
-        print("finished");
-        _timer.cancel();
-        showDialog(
-          context: Get.context!,
-          barrierDismissible: false,
-          builder: (context) => WillPopScope(
-                onWillPop: () async {
-                  // Return false to prevent the dialog from being closed
-                  return Future.value(hasStarted);
-                },
-                child: AlertDialog(
-                  title: const Text(
-                      "Contest has conducted",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 12,
-                      )),
-                  content: Lottie.asset('assets/lotties/bee-lounging.json',
-                      width: 24),
-                ),
-              ));
       }
     }
+  }
+
+  void init() async {
+    setBusy(true);
+    app.currentPlayer = await app.shared.getUser();
     setBusy(false);
+    getStartStatus();
+    pusher.init(read);
+    await getChallenge();
+
+    // _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    //   getStartStatus();
+    //   notifyListeners();
+    // });
   }
 
   getStartStatus() async {
@@ -116,14 +141,14 @@ class RegisterViewModel extends AppViewModel {
     setBusy(true);
     try {
       currentPlayer = await api.register(name);
-      if(currentPlayer != null) {
-        if (status == 0 && status!=null) {
-          _timer.cancel();
+      if (currentPlayer != null) {
+        if (status == 0 && status != null) {
+          // _timer.cancel();
           nav.pushReplacementNamed(Routes.wait,
               arguments:
-              WaitngArguments(player: currentPlayer!, q: challenge!));
+                  WaitngArguments(player: currentPlayer!, q: challenge!));
         } else {
-          _timer.cancel();
+          // _timer.cancel();
           nav.pop();
           notifyListeners();
           await nav.pushReplacementNamed(Routes.challenge,

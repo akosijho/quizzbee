@@ -3,6 +3,7 @@ import 'package:game_challenger/core/services/api/api_service.dart';
 import 'package:game_challenger/core/services/api/api_service_impl.dart';
 import 'package:game_challenger/core/services/navigation/navigation_service.dart';
 import 'package:game_challenger/core/services/navigation/navigation_service_impl.dart';
+import 'package:game_challenger/core/services/pusher/pusher.dart';
 import 'package:game_challenger/core/services/shared/shared_preference.dart';
 import 'package:game_challenger/core/services/shared/shared_preference_impl.dart';
 import 'package:game_challenger/views/challenge/challenge.dart';
@@ -47,5 +48,6 @@ import 'package:stacked/stacked_annotations.dart';
   LazySingleton(classType: NavigationServiceImpl, asType: NavigationService),
   LazySingleton(classType: ApiServiceImpl, asType: ApiService),
   LazySingleton(classType: SharedPreferenceImpl, asType: SharedPreference),
+  LazySingleton(classType: Pusher, asType: Pusher),
 ])
 class App {}

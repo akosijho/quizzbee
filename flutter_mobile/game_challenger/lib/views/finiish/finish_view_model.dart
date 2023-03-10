@@ -9,7 +9,7 @@ class FinishViewModel extends AppViewModel {
 
   FinishViewModel({required this.player});
 
-  int? playerPoints;
+  int? playerPoints = 0;
 
   void init() async {
     getPoints(player.id!.toString());

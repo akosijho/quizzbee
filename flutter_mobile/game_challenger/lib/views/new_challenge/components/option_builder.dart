@@ -51,10 +51,10 @@ class OptionBuilder extends ViewModelWidget<NewChallengeViewModel> {
               ),
               viewModel.index == viewModel.challenge.choice!.indexOf(choice)
                   ? viewModel.correct
-                      ? Icon(
+                      ? const Icon(
                           Icons.check_circle,
                           size: 24,
-                          color: const Color(0xff31cb00).withOpacity(0.9),
+                          color: Colors.white,
                         )
                       : Container(
                           width: 24,
