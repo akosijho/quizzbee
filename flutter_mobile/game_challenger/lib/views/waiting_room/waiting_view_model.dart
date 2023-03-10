@@ -4,6 +4,7 @@ import 'package:game_challenger/app/app.router.dart';
 import 'package:game_challenger/app/app_view_model.dart';
 import 'package:game_challenger/core/models/challenge.dart';
 import 'package:game_challenger/core/models/player.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class WaitingViewModel extends AppViewModel{
 
@@ -14,19 +15,28 @@ class WaitingViewModel extends AppViewModel{
 
   Timer? _timer;
 
-  int? status;
+  int status = 0;
 
-  void init()async{
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+  void init(){
+    pusher.init(read);
+    // _timer = Timer.periodic(Duratin(milliseconds: 1000), (timer) {
+    //   getStartStatus();
+    //   notifyListeners();
+    // });
+  }
+
+  void read(PusherEvent event){
+    if(event.eventName == 'waiting-event'){
+      print("event ${event.data}");
+      status = event.data == "{\"waiting_room\":0}" ? 1 : 0;
       getStartStatus();
-      notifyListeners();
-    });
+    }
   }
 
 getStartStatus() async {
-    status = await api.start();
+    // status = await api.start();
     if(status == 1){
-      _timer!.cancel();
+      // _timer!.cancel();
       await nav.pushReplacementNamed(Routes.challenge,
           arguments: ChallengeArguments(
               challenge: q, player: p));
