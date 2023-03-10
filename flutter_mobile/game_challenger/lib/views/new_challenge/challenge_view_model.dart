@@ -27,29 +27,39 @@ class NewChallengeViewModel extends AppViewModel {
   Timer? timer;
 
   Future<void> read(PusherEvent event) async {
-    print("event ${event.data}");
-    String s = event.data.toString();
-    if (s != "{}") {
-      var n = s.substring(1, s.length - 1);
-      var n1 = n.substring(1, n.length - 1);
-      String unescapedString =
-      n1.replaceAll('\\\"', '"').replaceAll('\\\\', '');
-      var j = jsonDecode(unescapedString);
-      next = Question(
-          id: j['id'],
-          question: j['question'],
-          status: j['status'],
-          answer: j['answer'],
-          choice: (j['choice'] as List<dynamic>)
-              .map((e) => Option.fromJson(e as Map<String, dynamic>))
-              .toList());
-      print('j $next');
-      if (challenge != next) {
-        // timer!.cancel();
-        nav.pushReplacementNamed(Routes.challenge,
-            arguments: ChallengeArguments(challenge: next!, player: player));
+    if(event.eventName == 'finish-event'){
+      print("event ${event.data}");
+      String s = event.data.toString();
+      finish = s == "{\"finish\":1}" ? 1 : 0;
+      print("finish $finish");
+      getFinish();
+    }
 
-        notifyListeners();
+    if(event.eventName == 'my-event'){
+
+      String s = event.data.toString();
+      if (s != "[]") {
+        var n = s.substring(1, s.length - 1);
+        var n1 = n.substring(1, n.length - 1);
+        String unescapedString =
+        n1.replaceAll('\\\"', '"').replaceAll('\\\\', '');
+        var j = jsonDecode(unescapedString);
+        next = Question(
+            id: j['id'],
+            question: j['question'],
+            status: j['status'],
+            answer: j['answer'],
+            choice: (j['choice'] as List<dynamic>)
+                .map((e) => Option.fromJson(e as Map<String, dynamic>))
+                .toList());
+        print('j $next');
+        if (challenge != next) {
+          // timer!.cancel();
+          nav.pushReplacementNamed(Routes.challenge,
+              arguments: ChallengeArguments(challenge: next!, player: player));
+
+          notifyListeners();
+        }
       }
     }
   }
@@ -124,24 +134,24 @@ class NewChallengeViewModel extends AppViewModel {
   }
 
   void getFinish() async {
-    try {
-      final temp = await api.finish();
-      if (temp != null) {
-        finish = temp;
+    // try {
+      // final temp = await api.finish();
+      // if (temp != null) {
+      //   finish = temp;
         if (finish == 1) {
-          timer!.cancel();
-          nav.pushReplacementNamed(Routes.finish,
+          // timer!.cancel();
+          await nav.pushReplacementNamed(Routes.finish,
               arguments: FinishArguments(player: player));
 
           notifyListeners();
         }
-        notifyListeners();
-      }
-    } on DioError catch (e) {
-      connectionResponse(e);
-      rethrow;
-    }
-    notifyListeners();
+      //   notifyListeners();
+      // }
+  //   } on DioError catch (e) {
+  //     connectionResponse(e);
+  //     rethrow;
+  //   }
+  //   notifyListeners();
   }
 
   void getPoints() async {
