@@ -13,7 +13,7 @@ class Next extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NextViewModel>.reactive(
-        viewModelBuilder: () => NextViewModel(),
+        viewModelBuilder: () => NextViewModel(currentChallenge: q),
         onViewModelReady: (model) => model.init(),
         builder: (context, model, child) {
           return SafeArea(

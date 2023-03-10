@@ -19,10 +19,6 @@ class WaitingViewModel extends AppViewModel{
 
   void init(){
     pusher.init(read);
-    // _timer = Timer.periodic(Duratin(milliseconds: 1000), (timer) {
-    //   getStartStatus();
-    //   notifyListeners();
-    // });
   }
 
   void read(PusherEvent event){

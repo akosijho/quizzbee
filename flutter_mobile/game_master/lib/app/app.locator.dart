@@ -12,6 +12,7 @@ import '../core/services/api/api_service.dart';
 import '../core/services/api/api_service_impl.dart';
 import '../core/services/navigation/navigation_service.dart';
 import '../core/services/navigation/navigation_service_impl.dart';
+import '../core/services/pusher/pusher.dart';
 import '../core/services/shared/shared_preference.dart';
 import '../core/services/shared/shared_preference_impl.dart';
 import 'app_view_model.dart';
@@ -30,4 +31,5 @@ Future<void> setupLocator(
       .registerLazySingleton<NavigationService>(() => NavigationServiceImpl());
   locator.registerLazySingleton<ApiService>(() => ApiServiceImpl());
   locator.registerLazySingleton<SharedPreference>(() => SharedPreferenceImpl());
+  locator.registerLazySingleton<Pusher>(() => Pusher());
 }

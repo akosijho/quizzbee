@@ -1,41 +1,59 @@
- import 'package:dio/dio.dart';
+ import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:game_master/app/app.router.dart';
 import 'package:game_master/app/app_view_model.dart';
 import 'package:game_master/core/models/challenge.dart';
 import 'package:game_master/widgets/conection_response.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class NextOneViewModel extends AppViewModel{
+  Question currentChallenge;
   Question? challenge;
 
+  NextOneViewModel({required this.currentChallenge});
+
   void init() async {
-    await getChallenge();
+    pusher.init(read);
+  }
+
+  Future<void> read(PusherEvent event) async {
+    if(event.eventName == 'my-event'){
+      print("event ${event.data}");
+      if (event.data.toString() != "\"[]\"") {
+        String s = event.data.toString();
+        var n = s.substring(1, s.length - 1);
+        var n1 = n.substring(1, n.length - 1);
+        String unescapedString =
+        n1.replaceAll('\\\"', '"').replaceAll('\\\\', '');
+        var j = jsonDecode(unescapedString);
+        challenge = Question(
+            id: j['id'],
+            question: j['question'],
+            status: j['status'],
+            answer: j['answer'],
+            choice: (j['choice'] as List<dynamic>)
+                .map((e) => Option.fromJson(e as Map<String, dynamic>))
+                .toList());
+        print('j $challenge');
+        if (challenge != currentChallenge) {
+          // timer!.cancel();
+          await nav.pushReplacementNamed(Routes.next,
+              arguments: NextArguments(q: challenge!));
+          notifyListeners();
+        }
+      }else{
+        await nav.pushReplacementNamed(Routes.finish);
+      }
+    }
   }
 
   void toNext(String id) async {
     try {
       await api.next(id);
-      await getChallenge();
-      await nav.pushReplacementNamed(Routes.next,
-          arguments: NextArguments(q: challenge!));
     } on DioError catch (e) {
       connectionResponse(e);
       rethrow;
     }
-  }
-
-  Future<Question?> getChallenge() async {
-    try {
-      var temp = await api.getQuestion();
-      if (temp != null && temp!.isNotEmpty) {
-        print(temp);
-        return challenge = temp![0];
-      }else{
-        await nav.pushReplacementNamed(Routes.finish);
-      }
-    } on DioError catch (e) {
-      connectionResponse(e);
-      rethrow;
-    }
-    return null;
   }
 }
