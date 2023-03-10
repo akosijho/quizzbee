@@ -15,7 +15,7 @@ class NextOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NextOneViewModel>.reactive(
-        viewModelBuilder: () => NextOneViewModel(),
+        viewModelBuilder: () => NextOneViewModel(currentChallenge: q),
         onViewModelReady: (model) => model.init(),
         builder: (context, model, child) {
           return SafeArea(
