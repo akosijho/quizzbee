@@ -7,6 +7,10 @@
     <label for="question" class="form-label">Question</label>
     <textarea name="message" class="form-label" style="width: 100%; border: 1px solid grey;"></textarea>
   </div>
+  <div class="mb-3" style="display: flex; justify-content:center; align-items: flex-start; flex-direction: column;">
+    <label for="answer_identification" class="form-label">Answer For Identtification</label>
+    <textarea name="answer_iden" class="form-label" style="width: 100%; border: 1px solid grey;"></textarea>
+  </div>
   <div class="mb-3">
     <label for="choices" class="form-label">Choices</label>
     <button type="button" style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;" class="btn btn-info" onclick="addTextBox()" style="height: 20px;">+</button>

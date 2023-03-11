@@ -25,22 +25,34 @@ class QuestionController extends Controller
 
     public function save(Request $request)
     {
-        $question = [
-            'question' => $request->message,
-            'answer' =>$request->answer,
-            'status' => 1
-        ];
 
-        $id = $this->question->getIdQuestion($question);
+        if(is_null($request->answer_iden)){
+            $question = [
+                        'question' => $request->message,
+                        'answer' =>$request->answer,
+                        'tag'=> 'abcd',
+                        'status' => 1
+                    ];
 
-        foreach($request->choices as $choice)
-        {
-            $choices = [
-                'choices' => $choice,
-                'question_id' => $id
+            $id = $this->question->getIdQuestion($question);
+
+            foreach($request->choices as $choice)
+            {
+                $choices = [
+                    'choices' => $choice,
+                    'question_id' => $id
+                ];
+                $this->choice->addChoice($choices);
+    
+            }
+        }else{
+            $question = [
+                'question' => $request->message,
+                'answer' =>$request->answer_iden,
+                'tag'=> 'identification',
+                'status' => 1
             ];
-            $this->choice->addChoice($choices);
-
+            $id = $this->question->getIdQuestion($question);
         }
         return redirect()->route('question.index');
     }

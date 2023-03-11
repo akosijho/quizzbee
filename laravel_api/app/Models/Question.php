@@ -9,7 +9,7 @@ use App\Models\Choice;
 class Question extends Model
 {
     use HasFactory;
-    protected $fillable = ['question','answer','status'];
+    protected $fillable = ['question','answer','status', 'tag'];
     
 
     public function choice()
