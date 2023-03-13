@@ -1,0 +1,4 @@
+flutter_icons:
+  android: "ic_launcher"
+  image_path: "assets/images/bee.png"
+  min_sdk_android: 16 # android min sdk min:16, default 21
